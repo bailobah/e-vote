@@ -1,0 +1,32 @@
+
+{% for political_party in political_partys %}
+<tr>
+    <td>
+        <span class="custom-checkbox">
+            <input type="checkbox" id="checkbox1" name="options[]" value="{{ political_party.id }}">
+            <label for="checkbox1"></label>
+        </span>
+    </td>
+    <td>{{ political_party.id }}</td>
+    <td>{{ political_party.name }}</td>
+    <td>{{ political_party.is_active }}</td>
+    <td>{{ political_party.description }}</td>
+      <td>
+      <button type="button"
+              class="btn btn-warning btn-sm js-update-political_party"
+              data-url="{% url 'political_party_update' political_party.id %}">
+        <span class="glyphicon glyphicon-pencil"></span> Edit
+      </button>
+      <button type="button"
+              class="btn btn-danger btn-sm js-delete-political_party"
+              data-url="{% url 'political_party_delete' political_party.id %}">
+        <span class="glyphicon glyphicon-trash"></span> Supprimer
+      </button>
+    </td>
+
+</tr>
+{% empty %}
+<tr>
+    <td colspan="7" class="text-center bg-warning">Zero parti enrégistré</td>
+</tr>
+{% endfor %}

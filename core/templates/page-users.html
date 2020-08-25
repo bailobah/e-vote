@@ -1,0 +1,48 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Profile {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="row">
+
+  <div class="col-md-4">
+    <div class="card card-profile">
+      <div class="card-avatar">
+        <a href="#pablo">
+
+          <!--  <img class="img" src="/static/assets/img/faces/marc.jpg" />-->
+          {% if user.profile.image %}
+          <img src="{{ user.profile.image.url }}" width="240">
+          {% endif %}
+        </a>
+      </div>
+      <div class="card-body">
+        <h4 class="card-category text-gray">
+          {{ request.user.last_name }}
+        </h4>
+        <h4 class="card-title">
+          {{ request.user.first_name }}
+        </h4><h4 class="card-title">
+        {{ request.user.phone_number }}
+      </h4><h4 class="card-title">
+        {{ request.user.city }}
+      </h4><h4 class="card-title">
+        {{ request.user.country }}
+      </h4>
+        <p class="card-description">
+          {{ request.user.aboout }}
+        </p>
+<!--        <a href="#pablo" class="btn btn-primary btn-round">Follow</a>-->
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

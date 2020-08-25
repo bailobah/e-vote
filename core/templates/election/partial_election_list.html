@@ -1,0 +1,32 @@
+
+{% for election in elections %}
+<tr>
+    <td>
+        <span class="custom-checkbox">
+            <input type="checkbox" id="checkbox1" name="options[]" value="{{ election.id }}">
+            <label for="checkbox1"></label>
+        </span>
+    </td>
+    <td>{{ election.id }}</td>
+    <td>{{ election.description }}</td>
+    <td>{{ election.is_active }}</td>
+    <td>{{ election.get_election_type_display }}</td>
+      <td>
+      <button type="button"
+              class="btn btn-warning btn-sm js-update-election"
+              data-url="{% url 'election_update' election.id %}">
+        <span class="glyphicon glyphicon-pencil"></span> Edit
+      </button>
+      <button type="button"
+              class="btn btn-danger btn-sm js-delete-election"
+              data-url="{% url 'election_delete' election.id %}">
+        <span class="glyphicon glyphicon-trash"></span> Delete
+      </button>
+    </td>
+
+</tr>
+{% empty %}
+<tr>
+    <td colspan="7" class="text-center bg-warning">No Election</td>
+</tr>
+{% endfor %}

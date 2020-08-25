@@ -1,0 +1,123 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Page User {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="row">
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-header card-header-primary">
+        <h4 class="card-title">Edit Profile</h4>
+        <p class="card-category">Complete your profile</p>
+      </div>
+      <div class="card-body">
+      <form role="form" method="post" action="{% url 'update_profile' %}" >
+
+          {% csrf_token %}
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="bmd-label-floating">UserID (disabled)</label>
+                <input type="text" class="form-control" disabled value="{{ request.user.id }}">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="bmd-label-floating">Phone Number</label>
+                <input type="text" class="form-control" value=" {{ user.phone_number }}">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="bmd-label-floating">Fist Name</label>
+                <input type="text" class="form-control" value="{{ user.first_name }}">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="bmd-label-floating" value="{{ user.first_name }}">Last Name</label>
+                <input type="text" class="form-control" value="{{ user.first_name }}">
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="bmd-label-floating">City</label>
+                <input type="text" class="form-control" value="{{ profile.city }}">
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="bmd-label-floating">Country</label>
+                <input type="text" class="form-control" value="{{ profile.country }}">
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="bmd-label-floating">Postal Code</label>
+                <input type="text" class="form-control" value="{{ profile.code_postal }}">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label>About Me</label>
+                <div class="form-group">
+                  <label class="bmd-label-floating"> Lamborghini Mercy, Your chick she so thirsty, I'm in that two seat Lambo.</label>
+                  <textarea class="form-control" rows="5" value="{{ profile.code_postal }}"></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button type="submit" name="profile" class="btn btn-primary pull-right">Update Profile</button>
+          <div class="clearfix"></div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card card-profile">
+      <div class="card-avatar">
+        <a href="#pablo">
+          {% if user.profile.image %}
+          <img src="{{ user.profile.image.url }}" width="240">
+          {% else %}
+          <img class="img" src="/static/assets/img/faces/marc.jpg" />
+          {% endif %}
+        </a>
+      </div>
+      <div class="card-body">
+
+        <h4 class="card-category text-gray"><label class="bmd-label-floating">Name :</label>
+          {{ user.first_name }}  {{ user.last_name }}
+        </h4>
+        <h4 class="card-title">
+          {{ user.phone_number }}
+        </h4>
+        <h4 class="card-title">
+          {{ profile.city }}
+        </h4>
+        <h4 class="card-title">
+          {{ profile.country }}
+        </h4>
+        <p class="card-description">
+          {{ profile.aboout }}
+        </p>
+        <!--        <a href="#pablo" class="btn btn-primary btn-round">Follow</a>-->
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

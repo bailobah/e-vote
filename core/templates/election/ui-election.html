@@ -1,0 +1,73 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Election {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+<p>
+  <button type="button" class="btn btn-primary js-create-election" data-url="{% url 'election_create' %}">
+    <span class="glyphicon glyphicon-plus"></span>
+    New Election
+  </button>
+</p>
+<table class="table" id="election-table">
+  <thead>
+  <tr>
+    <th>Box</th>
+    <th>ID</th>
+    <th>Description</th>
+    <th>Status</th>
+    <th>Election Type</th>
+  </tr>
+  </thead>
+  <tbody>
+  <body>
+  {% for election in elections %}
+  <tr>
+    <td>
+        <span class="custom-checkbox">
+            <input type="checkbox" id="checkbox1" name="options[]" value="{{ election.id }}">
+            <label for="checkbox1"></label>
+        </span>
+    </td>
+    <td>{{ election.id }}</td>
+    <td>{{ election.description }}</td>
+    <td>{{ election.is_active }}</td>
+    <td>{{ election.get_election_type_display }}</td>
+    <td>
+      <button type="button"
+              class="btn btn-warning btn-sm js-update-election"
+              data-url="{% url 'election_update' election.id %}">
+        <span class="glyphicon glyphicon-pencil"></span> Edit
+      </button>
+      <button type="button"
+              class="btn btn-danger btn-sm js-delete-election"
+              data-url="{% url 'election_delete' election.id %}">
+        <span class="glyphicon glyphicon-trash"></span> Delete
+      </button>
+    </td>
+
+  </tr>
+  {% empty %}
+  <tr>
+    <td colspan="7" class="text-center bg-warning">No Election</td>
+  </tr>
+  {% endfor %}
+  </body>
+  </tbody>
+</table>
+<div class="modal fade" id="modal-election">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    </div>
+  </div>
+</div>
+{% endblock content %}
+
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+  <script src="/static/assets/js/election/election.js"></script>
+{% endblock javascripts %}
