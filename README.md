@@ -1,45 +1,16 @@
-# [Django Dashboard - Material Design](https://appseed.us/admin-dashboards/django-dashboard-material)
+****# [DE-vote](#)
 
-> **Open-Source Admin Dashboard** coded in **Django Framework** by **AppSeed** [Web App Generator](https://appseed.us/app-generator) - Features:
+- UI Kit: **Evote Dashboard**  provided by **Sab Innov**
 
-- UI Kit: **Material Dashboard** (Free Version) provided by **Creative-Tim**
-- UI-Ready app, SQLite Database, Django Native ORM
-- Modular design, clean code-base
-- Session-Based Authentication, Forms validation
-- Deployment scripts: Docker, Gunicorn / Nginx
-- **[MIT License](https://github.com/app-generator/license-mit)**
-- Free support via **Github** issues tracker
-- Paid 24/7 Live Support via [Discord](https://discord.gg/fZC6hup).
 
-> Links
 
-- [Django Dashboard - Material design](https://appseed.us/admin-dashboards/django-dashboard-material) - pProduct page
-- [Django Dashboard Material Demo](https://django-dashboard-material.appseed.us/) - LIVE App
-- [Boierplate Code Django](https://docs.appseed.us/boilerplate-code/django-dashboard/) - Reference Documentation
-- More [Django Dashboards](https://appseed.us/admin-dashboards/django) - index hosted by **AppSeed**
-- More [Admin Dashboards](https://appseed.us/admin-dashboards) - index hosted by **AppSeed**
-
-## Want more? Go PRO!
-
-PRO versions include **Premium UI Kits**, Lifetime updates and **24/7 LIVE Support** (via [Discord](https://discord.gg/fZC6hup))
-
-| [Django Dashboard Material PRO](https://appseed.us/admin-dashboards/django-dashboard-material-pro) | [Django Dashboard Black PRO](https://appseed.us/admin-dashboards/django-dashboard-black-pro) | [Django Dashboard Argon PRO](https://appseed.us/admin-dashboards/django-dashboard-argon-pro) |
-| --- | --- | --- |
-| [![Django Dashboard Material PRO](https://raw.githubusercontent.com/app-generator/django-dashboard-material-pro/master/media/django-dashboard-material-pro-screen.png)](https://appseed.us/admin-dashboards/django-dashboard-material-pro) | [![Django Dashboard Black PRO](https://raw.githubusercontent.com/app-generator/django-dashboard-black-pro/master/media/django-dashboard-black-pro-screen.png)](https://appseed.us/admin-dashboards/django-dashboard-black-pro) | [![Django Dashboard Argon PRO](https://raw.githubusercontent.com/app-generator/django-dashboard-argon-pro/master/media/django-dashboard-argon-pro-screen.png)](https://appseed.us/admin-dashboards/django-dashboard-argon-pro)
-
-<br />
-<br />
-
-![Django Dashboard Material Design - Template project provided by AppSeed.](https://raw.githubusercontent.com/app-generator/django-dashboard-material/master/media/django-dashboard-material-screen.png)
-
-<br />
 
 ## How to use it
 
 ```bash
 $ # Get the code
-$ git clone https://github.com/app-generator/django-dashboard-material.git
-$ cd django-dashboard-material
+$ git clone https://github.com/bailobah/e-vote.git
+$ cd e-vote
 $
 $ # Virtualenv modules installation (Unix based systems)
 $ virtualenv env
@@ -49,7 +20,7 @@ $ # Virtualenv modules installation (Windows based systems)
 $ # virtualenv env
 $ # .\env\Scripts\activate
 $
-$ # Install modules - SQLite Storage
+$ 
 $ pip3 install -r requirements.txt
 $
 $ # Create tables
@@ -203,15 +174,3 @@ Serving on http://localhost:8001
 Visit `http://localhost:8001` in your browser. The app should be up & running.
 
 <br />
-
-## Credits & Links
-
-- [Django](https://www.djangoproject.com/) - The official website
-- [Boilerplate Code](https://appseed.us/boilerplate-code) - Index provided by **AppSeed**
-- [Boilerplate Code](https://github.com/app-generator/boilerplate-code) - Index published on Github
-
-<br />
-
----
-[Django Dashboard Material](https://appseed.us/admin-dashboards/django-dashboard-material) - Provided by **AppSeed** [Web App Generator](https://appseed.us/app-generator).
-# e-vote

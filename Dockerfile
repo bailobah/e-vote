@@ -6,6 +6,9 @@ COPY manage.py gunicorn-cfg.py requirements.txt .env ./
 COPY app app
 COPY authentication authentication
 COPY core core
+COPY users users
+COPY political_party political_party
+
 
 RUN pip install -r requirements.txt
 
