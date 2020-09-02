@@ -1,0 +1,5 @@
+
+find . -path "*/migrations/*.py" -not -name "__init__.py" -delete
+pip install --upgrade --force-reinstall Django==2.2.10
+python manage.py migrate --run-syncdb
+

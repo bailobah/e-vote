@@ -1,0 +1,41 @@
+
+{% for field in data %}
+<tr>
+<!--    <td>
+        <span class="custom-checkbox">
+            <input type="checkbox" id="checkbox1" name="options[]" value="{{ field.id }}">
+            <label for="checkbox1"></label>
+        </span>
+    </td>
+    <td>{{ field.id }}</td>
+    -->
+    <td>{{ field.id_election }}</td>
+    <td>{{ field.id_polling }}</td>
+    <td>{{ field.id_user }}</td>
+    <td>{{ field.nbr_polling_planned }}</td>
+    <td>{{ field.nbr_polling_real }}</td>
+    <td>{{ field.nbr_registrants }}</td>
+    <td>{{ field.nbr_voters }}</td>
+    <td>{{ field.nbr_invalids_ballots }}</td>
+    <td>{{ field.nbr_votes_cast }}</td>
+    <td>{{ field.created_at }}</td>
+    <td>{{ field.image_url }}</td>
+    <td>
+        <button type="button"
+                class="btn btn-warning btn-sm js-update"
+                data-url="{% url 'minute_update' field.id %}">
+            <span class="glyphicon glyphicon-pencil"></span> Modifier
+        </button>
+        <button type="button"
+                class="btn btn-danger btn-sm js-delete"
+                data-url="{% url 'minute_delete' field.id %}">
+            <span class="glyphicon glyphicon-trash"></span> Supprimer
+        </button>
+    </td>
+
+</tr>
+{% empty %}
+<tr>
+    <td class="text-center bg-warning">Zero PV enrégistré</td>
+</tr>
+{% endfor %}

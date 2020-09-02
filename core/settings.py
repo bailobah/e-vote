@@ -19,7 +19,7 @@ SECRET_KEY = config('SECRET_KEY', default='S#perS3crEt_1122')
 DEBUG = config('DEBUG', default=False)
 
 # load production server from .env
-ALLOWED_HOSTS = ['192.168.1.255', '127.0.0.1', '85.170.200.186', config('SERVER', default='85.170.200.186')]
+ALLOWED_HOSTS = ['192.168.1.25', '127.0.0.1', '85.170.200.186', config('SERVER', default='localhost')]
 
 # Application definition
 
@@ -34,6 +34,8 @@ INSTALLED_APPS = [
     'users',
     'election',
     'political_party',
+    'locality_type',
+    'locality',
     'widget_tweaks',
 ]
 
@@ -134,5 +136,8 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'core/static'),
 )
+
+MEDIA_URL = '/pv/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'pv/')
 #############################################################
 #############################################################

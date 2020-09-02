@@ -72,7 +72,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         return full_name.strip()
 
     def __str__(self):
-        return '{} <{}>'.format(self.get_full_name(), self.phone_number)
+        """String for representing the Model object."""
+        return f'{self.user.first_name} {self.user.last_name} ({self.user.phone_number})'
 
     def has_perm(self, perm, obj=None):
         "Does the user have a specific permission?"

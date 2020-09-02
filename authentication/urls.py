@@ -4,17 +4,25 @@ Copyright (c) 2019 - present AppSeed.us
 """
 
 from django.urls import path
+from  django.conf.urls.static import static
 from .views import login_view, register_user
 from django.contrib.auth.views import LogoutView
 from users.views import update_profile
-
+from django.conf import settings
 from election import views
 from political_party import views as views_party
+
+from locality_type import views as l_views
+
+l_name = 'locality_type'
+
+
 urlpatterns = [
     path('login/', login_view, name="login"),
     path('register/', register_user, name="register"),
     path("logout/", LogoutView.as_view(), name="logout"),
     path('profile/', update_profile, name="update_profile"),
+
     path('election/', views.election_list, name='election_list'),
     path('election/create/', views.election_create, name='election_create'),
     path('election/update/<int:pk>/', views.election_update, name='election_update'),
@@ -25,4 +33,17 @@ urlpatterns = [
     path('political_party/update/<int:pk>/', views_party.political_party_update, name='political_party_update'),
     path('political_party/delete/<int:pk>/', views_party.political_party_delete, name='political_party_delete'),
 
+    path('locality_type/', l_views.locality_type_list, name=f'{l_name}_list'),
+    path('locality_type/create/', l_views.locality_type_create, name=f'{l_name}_create'),
+    path('locality_type/update/<int:pk>/', l_views.locality_type_update, name=f'{l_name}_update'),
+    path('locality_type/delete/<int:pk>/', l_views.locality_type_delete, name=f'{l_name}_delete'),
+
+    path('minute/', views.minute_list, name='minute_list'),
+    path('minute/create/', views.minute_create, name='minute_create'),
+    path('minute/update/<int:pk>/', views.minute_update, name='minute_update'),
+    path('minute/delete/<int:pk>/', views.minute_delete, name='minute_delete'),
+
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

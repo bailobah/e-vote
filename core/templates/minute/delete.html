@@ -1,0 +1,19 @@
+{% load widget_tweaks %}
+<form method="post" action="{% url 'minute_delete' minute.id %}" class="js-delete-form">
+  {% csrf_token %}
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <h4 class="modal-title">Suppression de pv</h4>
+  </div>
+  <div class="modal-body">
+    <p class="lead">Vous etes sur de vouloir supprimer le PV <strong>{{ minute.id }}</strong>?</p>
+      <p class="text-warning"><small>Cette suppretion est irrevocable.</small></p>
+
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+    <button type="submit" class="btn btn-danger">Supprimer</button>
+  </div>
+</form>

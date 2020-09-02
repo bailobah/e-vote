@@ -2,16 +2,16 @@
 <form method="post" action="{% url 'election_delete' election.id %}" class="js-election-delete-form">
   {% csrf_token %}
   <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-      <span aria-hidden="true">&times;</span>
-    </button>
-    <h4 class="modal-title">Confirm Election deletion</h4>
+    <h4 class="modal-title">Delete Election</h4>
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
   </div>
   <div class="modal-body">
     <p class="lead">Are you sure you want to delete the election? <strong>{{ election.description }}</strong>?</p>
+    <p class="text-warning"><small>This action cannot be undone.</small></p>
+
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-    <button type="submit" class="btn btn-danger">Delete Election</button>
+    <button type="submit" class="btn btn-danger">Delete</button>
   </div>
 </form>

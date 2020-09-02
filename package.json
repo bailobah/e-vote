@@ -1,19 +1,15 @@
 {
-  "name": "django-dashboard-material",
+  "name": "e-vote",
   "mastertemplate": "boilerplate-code-django-dashboard",
   "version": "1.0.1",
-  "description": "Template project - Django Boilerplate Code",
+  "description": "E vote",
   "scripts": {
   },
   "repository": {
       "type": "git",
-      "url": "https://github.com/app-generator/django-dashboard-material"
+      "url": "https://github.com/bailobah/e-vote.git"
   },
-  "bugs": {
-      "url": "https://github.com/app-generator/django-dashboard-material/issues",
-      "email": "support@appseed.us"
-  },
-  "author": "AppSeed App Generator <support@appseed.us> (https://appseed.us)",
+  "author": "Sab Innov",
   "engines": {
       "node": ">=10.0.0"
   },

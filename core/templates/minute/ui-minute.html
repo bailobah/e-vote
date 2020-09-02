@@ -1,0 +1,95 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Table des PVs {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+<p>
+  <button type="button" class="btn btn-primary js-create" data-url="{% url 'minute_create' %}">
+    <span class="glyphicon glyphicon-plus"></span>
+    Ajouter un PV
+  </button>
+</p>
+<table class="table" id="table">
+  <thead>
+  <tr>
+    <!--<th>Box</th>
+    <th>ID</th>
+    -->
+
+    <th>Election</th>
+    <th>Bureau du vote</th>
+    <th>Centralisateur</th>
+    <th>Centralisateur</th>
+    <th>Nbr bureau prévu</th>
+    <th>Nbr bureau réel</th>
+    <th>Nbr d'inscrit</th>
+    <th>Nbr de votants</th>
+    <th>Bulletin invalide</th>
+    <th>Bulletin valide</th>
+    <th>Date de creation</th>
+    <th>Photo PV</th>
+
+  </tr>
+  </thead>
+  <tbody>
+  <body>
+  {% for field in data %}
+  <tr>
+   <!-- <td>
+        <span class="custom-checkbox">
+            <input type="checkbox" id="checkbox1" name="options[]" value="{{ field.id }}">
+            <label for="checkbox1"></label>
+        </span>
+    </td>
+    <td>{{ field.id }}</td>
+    -->
+
+    <td>{{ field.id_election }}</td>
+    <td>{{ field.id_polling }}</td>
+    <td>{{ field.id_user }}</td>
+    <td>{{ field.nbr_polling_planned }}</td>
+    <td>{{ field.nbr_polling_real }}</td>
+    <td>{{ field.nbr_registrants }}</td>
+    <td>{{ field.nbr_voters }}</td>
+    <td>{{ field.nbr_invalids_ballots }}</td>
+    <td>{{ field.nbr_votes_cast }}</td>
+    <td>{{ field.created_at }}</td>
+    <td>{{ field.image_url }}</td>
+    <td>
+      <button type="button"
+              class="btn btn-warning btn-sm js-update"
+              data-url="{% url 'minute_update' field.id %}">
+        <span class="glyphicon glyphicon-pencil"></span> Editer
+      </button>
+      <button type="button"
+              class="btn btn-danger btn-sm js-delete"
+              data-url="{% url 'minute_delete' field.id %}">
+        <span class="glyphicon glyphicon-trash"></span> Supprimer
+      </button>
+    </td>
+
+  </tr>
+  {% empty %}
+  <tr>
+    <td class="text-center bg-warning">Zero PV enrégistré</td>
+  </tr>
+  {% endfor %}
+  </body>
+  </tbody>
+</table>
+<div class="modal fade" id="modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    </div>
+  </div>
+</div>
+{% endblock content %}
+
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+<script src="/static/assets/js/minute/minute.js"></script>
+{% endblock javascripts %}

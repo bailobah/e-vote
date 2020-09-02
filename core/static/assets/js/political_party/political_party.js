@@ -30,7 +30,7 @@ $(function () {
       dataType: 'json',
      success: function (data) {
         if (data.form_is_valid) {
-          $("#election-table tbody").html(data.html_election_list);
+          $("#political_party-table tbody").html(data.html_political_party_list);
           $("#modal-political_party").modal("hide");
         }
         else {

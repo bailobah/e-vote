@@ -1,0 +1,15 @@
+{% load widget_tweaks %}
+<form method="post" action="{% url 'minute_update' form.instance.pk %}" class="js-update-form">
+  {% csrf_token %}
+  <div class="modal-header">
+    <h4 class="modal-title">Modifier</h4>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close" aria-hidden="true">&times;</button>
+  </div>
+  <div class="modal-body">
+    {% include 'minute/form.html' %}
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+    <button type="submit" class="btn btn-primary">Enrégistrer</button>
+  </div>
+</form>
