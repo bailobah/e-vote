@@ -1,5 +1,8 @@
 {% load widget_tweaks %}
-{% for field in form %}
+{% for hidden in form.hidden_fields %}
+{{ hidden }}
+{% endfor %}
+{% for field in form.visible_fields  %}
   <div class="form-group{% if field.errors %} has-error{% endif %}">
     <label for="{{ field.id_for_label }}">{{ field.label }}</label>
     {% render_field field class="form-control" %}

@@ -76,19 +76,22 @@ class PollingStation(models.Model):
     def __str__(self):
         return self.name
 
+def user_directory_path(instance):
+    # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
+    return 'user_{0}'.format(instance.user.id)
 
 class Minute(models.Model):
-    election = models.ForeignKey(Election, on_delete=models.CASCADE, null=False)
+    election = models.ForeignKey(Election, verbose_name=_('Election'), on_delete=models.CASCADE, null=False)
     polling = models.ForeignKey(PollingStation, verbose_name=_('Numero du bureau de vote'), on_delete=models.CASCADE, null=False)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
-    nbr_polling_planned = models.IntegerField(_('Nombre de bureau de vote'), blank=False, null=False)
-    nbr_polling_real = models.IntegerField(blank=False, null=False)
-    nbr_registrants = models.IntegerField(blank=False, null=False)
-    nbr_voters = models.IntegerField(blank=False, null=False)
-    nbr_invalids_ballots = models.IntegerField(blank=False, null=False)
-    nbr_votes_cast = models.IntegerField(blank=False, null=False)
-    image_file = models.ImageField(upload_to=utils.user_directory_path,)
-    image_url = models.URLField()
+    user = models.ForeignKey(User,verbose_name=_('Centralisateur'), on_delete=models.CASCADE, null=False)
+    nbr_registrants = models.IntegerField(_('Nombre d\'inscrits'), blank=False, null=False)
+    #nbr_polling_planned = models.IntegerField(_('Nombre de bureau de vote'), blank=False, null=True)
+    #nbr_polling_real = models.IntegerField(blank=True, null=True)
+    nbr_voters = models.IntegerField(_('Nombre de votants'),blank=False, null=False)
+    nbr_invalids_ballots = models.IntegerField(_('Total des bulletins nuls'),blank=False, null=False)
+    nbr_votes_cast = models.IntegerField(_('Suffrage valablement exprimé'), blank=False, null=False)
+    image_file = models.ImageField(_('Photo du PV'),upload_to=user_directory_path,blank=False, null=False)
+    #image_url = models.URLField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -112,3 +115,4 @@ class MinuteDetails(models.Model):
 
     class Meta:
         db_table = "minute_details"
+

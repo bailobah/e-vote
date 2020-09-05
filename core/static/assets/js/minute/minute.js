@@ -53,3 +53,25 @@ $(function () {
     $("#table").on("click", ".js-delete", loadForm);
     $("#modal").on("submit", ".js-delete-form", saveForm);
 });
+
+/*
+$(document).ready(function(){
+    $("#id_album_logo").fileinput({
+    showUpload: false,
+    showCaption: false,
+    browseClass: "btn btn-primary btn-lg",
+    fileType: "any",
+    previewFileIcon: "<i class='glyphicon glyphicon-king'></i>",
+    overwriteInitial: false,
+    initialPreviewAsData: true,
+    {% if form.instance.album_logo %}
+    initialPreview: [
+        "{{ form.instance.image_file.url }}",
+    ],
+    initialPreviewConfig: [
+        {caption: "{{ form.instance.image_file.name}}",  width: "120px", url: "{$url}", key: 1},
+    ],
+    {% endif %}
+});
+})
+*/

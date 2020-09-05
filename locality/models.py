@@ -37,5 +37,5 @@ class Allocation(models.Model):
 
     class Meta:
         db_table = "allocation"
-    def __str__(self):
-        return f' {self.id}, {self.user.last_name} {self.user.first_name}, ville ({self.locality.name})'
+    # def __str__(self):
+    #     return f' {self.id}, {self.user.last_name} {self.user.first_name}, ville ({self.locality.name})'

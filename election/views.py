@@ -2,7 +2,7 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.template.loader import render_to_string
-from election.forms import ElectionForm, MinuteForm, MinuteFormFilterForm
+from election.forms import ElectionForm, MinuteForm, MinuteFormFilterForm, MinuteUpdateForm
 from election.models import Election, Minute
 
 
@@ -118,10 +118,14 @@ def minute_create(request):
     data = dict()
 
     if request.method == 'POST':
+
         form = MinuteForm(request.POST, request.FILES)
+
         if form.is_valid():
-            pv = form.cleaned_data
-            form.save()
+            pv = form.save(commit=False)
+            pv.user = request.user
+            pv.election_id = 1
+            pv.save()
             data['form_is_valid'] = True
         else:
             data['form_is_valid'] = False
@@ -153,7 +157,7 @@ def minute_update(request, pk):
     data = get_object_or_404(Minute, pk=pk)
 
     if request.method == 'POST':
-        form = MinuteForm(request.POST, instance=data)
+        form = MinuteUpdateForm(request.POST, instance=data)
     else:
-        form = MinuteForm(instance=data)
+        form = MinuteUpdateForm(instance=data)
     return save_minute_form(request, form, 'minute/update.html')

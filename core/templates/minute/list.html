@@ -1,21 +1,12 @@
 
 {% for field in data %}
 <tr>
-<!--    <td>
-        <span class="custom-checkbox">
-            <input type="checkbox" id="checkbox1" name="options[]" value="{{ field.id }}">
-            <label for="checkbox1"></label>
-        </span>
-    </td>
-    <td>{{ field.id }}</td>
-    -->
-    <td>{{ field.id_election }}</td>
-    <td>{{ field.id_polling }}</td>
-    <td>{{ field.id_user }}</td>
-    <td>{{ field.nbr_polling_planned }}</td>
-    <td>{{ field.nbr_polling_real }}</td>
+
+    <td>{{ field.election_id }}</td>
+    <td>{{ field.get_user_type_display }}</td>
+    <td>{{ field.get_pulling_type_display }}</td>
     <td>{{ field.nbr_registrants }}</td>
-    <td>{{ field.nbr_voters }}</td>
+    <td>{{ field.nbr_voters}}</td>
     <td>{{ field.nbr_invalids_ballots }}</td>
     <td>{{ field.nbr_votes_cast }}</td>
     <td>{{ field.created_at }}</td>
@@ -35,7 +26,7 @@
 
 </tr>
 {% empty %}
-<tr>
-    <td class="text-center bg-warning">Zero PV enrégistré</td>
-</tr>
+<div class="btn btn-warning btn-sm btn-block">
+    <span>Zero PV enrégistré</span>
+</div>
 {% endfor %}
