@@ -19,8 +19,20 @@ SECRET_KEY = config('SECRET_KEY', default='S#perS3crEt_1122')
 DEBUG = config('DEBUG', default=False)
 #DEBUG = True
 # load production server from .env
-ALLOWED_HOSTS = ['*']
 
+def ip_addresses():
+    ip_list = []
+    for interface in netifaces.interfaces():
+        addrs = netifaces.ifaddresses(interface)
+        for x in (netifaces.AF_INET, netifaces.AF_INET6):
+            if x in addrs:
+                ip_list.append(addrs[x][0]['addr'])
+    return ip_list
+
+#ALLOWED_HOSTS = ip_addresses()
+
+ALLOWED_HOSTS = ['evote.sabinnov.com'] 
+#ALLOWED_HOSTS  += ipaddresses()
 # Application definition
 
 INSTALLED_APPS = [
@@ -36,6 +48,7 @@ INSTALLED_APPS = [
     'political_party',
     'locality_type',
     'locality',
+#    'api',
     'widget_tweaks',
     'rest_framework',
     'rest_framework.authtoken',
@@ -87,7 +100,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'OPTIONS': {
-            'read_default_file': '/etc/mysql/evote.cnf',
+            'read_default_file': '/etc/mysql/my.cnf',
         },
     }
 }
