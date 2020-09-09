@@ -19,6 +19,10 @@ SECRET_KEY = config('SECRET_KEY', default='S#perS3crEt_1122')
 DEBUG = config('DEBUG', default=False)
 #DEBUG = True
 # load production server from .env
+<<<<<<< HEAD
+=======
+ALLOWED_HOSTS = ['evote.sabinnov.com', '127.0.0.1', config('SERVER', default='localhost')]
+>>>>>>> de2053cd7f79c7387f4eeaee1f53522104070d3d
 
 def ip_addresses():
     ip_list = []
@@ -34,7 +38,8 @@ def ip_addresses():
 ALLOWED_HOSTS = ['evote.sabinnov.com'] 
 #ALLOWED_HOSTS  += ipaddresses()
 # Application definition
-
+#http://192.168.1.31:8080/login/?next=/
+#http://85.170.200.186:8080/
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',

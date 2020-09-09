@@ -10,5 +10,28 @@ iSPKcu5byzZ2zhK
 
 Y88VV3wJEAUd9zr server
 
+
+[doc server]
+http://evote.sabinnov.com/
+API http://evote.sabinnov.com/api/v1/login/
+API http://evote.sabinnov.com/api/v1/getdata/
+
+
+[database]
+host evote.sabinnov.com
+port 3306
+database : evote
+pwd :      evote2020
+
+[ssh]
+
+host evote.sabinnov.com
+port 22
+pwd evote2020
+
+
 evote2020 server database
 /home/evote/evote/e-vote
+
+Current-Root-Password
+sudo tail -F /var/log/nginx/error.log

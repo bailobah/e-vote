@@ -15,3 +15,6 @@ rest_framework
 djangorestframework
 django-rest-auth
 django-allauth
+unipath
+python-decouple
+
