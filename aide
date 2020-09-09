@@ -9,3 +9,6 @@ python manage.py migrate --run-syncdb
 iSPKcu5byzZ2zhK
 
 Y88VV3wJEAUd9zr server
+
+evote2020 server database
+/home/evote/evote/e-vote

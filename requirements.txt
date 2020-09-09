@@ -10,3 +10,8 @@ python-decouple
 gunicorn
 whitenoise
 mysqlclient
+django-widget-tweaks
+rest_framework
+djangorestframework
+django-rest-auth
+django-allauth
