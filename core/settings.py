@@ -19,10 +19,11 @@ SECRET_KEY = config('SECRET_KEY', default='S#perS3crEt_1122')
 DEBUG = config('DEBUG', default=False)
 #DEBUG = True
 # load production server from .env
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['evote.sabinnov.com', '127.0.0.1', config('SERVER', default='localhost')]
 
 # Application definition
-
+#http://192.168.1.31:8080/login/?next=/
+#http://85.170.200.186:8080/
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
