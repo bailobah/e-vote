@@ -1,18 +1,15 @@
-import urllib
-from datetime import datetime
+import os
+import uuid
 
 from django.db import models
+from django.utils.translation import gettext_lazy as _
+from rest_framework import serializers
 
-# Create your models here.
-from django.forms import ModelForm
-
-from locality.models import Locality
+from locality.models import Locality, LocalitySerializer
 from political_party.models import PoliticalParty
 from users.models import User
-from django.utils.translation import gettext_lazy as _
-from django.core.files import File
-import os
-from utils import utils
+
+# Create your models here.
 
 class Election(models.Model):
     LEGISLATIVE = 'LEGISLATIVE'
@@ -36,6 +33,11 @@ class Election(models.Model):
     def __str__(self):
         return '{}'.format(self.name)
 
+class ElectionStationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Election
+        fields = ['name']
+
 class Candidate(models.Model):
     name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
@@ -50,10 +52,14 @@ class Candidate(models.Model):
     def __str__(self):
         return self.name
 
+class CandidateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Candidate
+        fields = ['name','last_name']
 
 class ElectionCandidate(models.Model):
-    election = models.ForeignKey(Election,  on_delete=models.CASCADE, null=False)
-    candidate = models.ForeignKey(Candidate,  on_delete=models.CASCADE, null=False)
+    election = models.ForeignKey(Election, on_delete=models.CASCADE, null=False)
+    candidate = models.ForeignKey(Candidate, on_delete=models.CASCADE, null=False)
     political_party = models.ForeignKey(PoliticalParty,  on_delete=models.CASCADE, null=False)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -62,8 +68,15 @@ class ElectionCandidate(models.Model):
     class Meta:
         db_table = "election_candidate"
 
+class ElectionCandidateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ElectionCandidate
+        fields = ['election','candidate','political_party']
+        depth = 1
+
 class PollingStation(models.Model):
     name = models.CharField(max_length=100)
+    numero = models.IntegerField()
     locality = models.ForeignKey(Locality, on_delete=models.CASCADE, null=False)
     is_active = models.BooleanField(default=True)
     adress = models.CharField(max_length=100)
@@ -76,41 +89,49 @@ class PollingStation(models.Model):
     def __str__(self):
         return self.name
 
-def user_directory_path(instance):
-    # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
-    return 'user_{0}'.format(instance.user.id)
+class PollingStationSerializer(serializers.ModelSerializer):
+    locality = LocalitySerializer(many=False, read_only=True)
+
+    class Meta:
+        model = PollingStation
+        fields = ['name','numero', 'locality']
+        #depth=2
+
+
+def get_pv_path(instance, filename):
+    return os.path.join('pvs/{0}/{1}/{2}/{3}'.format(instance.user.id,instance.polling_id,uuid.uuid4(), filename))
 
 class Minute(models.Model):
     election = models.ForeignKey(Election, verbose_name=_('Election'), on_delete=models.CASCADE, null=False)
     polling = models.ForeignKey(PollingStation, verbose_name=_('Numero du bureau de vote'), on_delete=models.CASCADE, null=False)
     user = models.ForeignKey(User,verbose_name=_('Centralisateur'), on_delete=models.CASCADE, null=False)
     nbr_registrants = models.IntegerField(_('Nombre d\'inscrits'), blank=False, null=False)
-    #nbr_polling_planned = models.IntegerField(_('Nombre de bureau de vote'), blank=False, null=True)
-    #nbr_polling_real = models.IntegerField(blank=True, null=True)
     nbr_voters = models.IntegerField(_('Nombre de votants'),blank=False, null=False)
     nbr_invalids_ballots = models.IntegerField(_('Total des bulletins nuls'),blank=False, null=False)
     nbr_votes_cast = models.IntegerField(_('Suffrage valablement exprimé'), blank=False, null=False)
-    image_file = models.ImageField(_('Photo du PV'),upload_to=user_directory_path,blank=False, null=False)
-    #image_url = models.URLField(blank=True)
+    image = models.FileField(_('Photo du PV'),
+                                   upload_to= get_pv_path,
+                                   blank=False,
+                                   null=False
+                                   )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = "minute"
+        ordering = ['-id']
 
-    def get_remote_image(self):
-        if self.image_url and not self.image_file:
-            result = urllib.urlretrieve(self.image_url)
-            self.image_file.save(
-                os.path.basename(self.image_url),
-                File(open(result[0]))
-            )
-            self.save()
+class MinuteSerializer(serializers.ModelSerializer):
+    def create(self, validated_data):
+        Minute.objects.create(**validated_data)
 
+    class Meta:
+        model = Minute
+        fields = ['nbr_registrants', 'nbr_voters', 'nbr_invalids_ballots']
 
 class MinuteDetails(models.Model):
-    id_polling = models.ForeignKey(PollingStation,  on_delete=models.CASCADE, null=False)
-    id_political_party = models.ForeignKey(PoliticalParty,  on_delete=models.CASCADE, null=False)
+    polling = models.ForeignKey(PollingStation, on_delete=models.CASCADE, null=False)
+    id_political_party = models.ForeignKey(PoliticalParty, on_delete=models.CASCADE, null=False)
     nbr_votes_obtained = models.IntegerField(blank=False, null=False)
 
     class Meta:

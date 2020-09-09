@@ -10,18 +10,24 @@
     <td>{{ field.nbr_invalids_ballots }}</td>
     <td>{{ field.nbr_votes_cast }}</td>
     <td>{{ field.created_at }}</td>
-    <td>{{ field.image_url }}</td>
     <td>
-        <button type="button"
-                class="btn btn-warning btn-sm js-update"
-                data-url="{% url 'minute_update' field.id %}">
-            <span class="glyphicon glyphicon-pencil"></span> Modifier
-        </button>
-        <button type="button"
-                class="btn btn-danger btn-sm js-delete"
-                data-url="{% url 'minute_delete' field.id %}">
-            <span class="glyphicon glyphicon-trash"></span> Supprimer
-        </button>
+        <div class="btn-group" >
+            <a  type="button" id ="imageresource" src="{{ field.image.url }}"
+                class="btn btn-primary btn-sm"
+                data-toggle="modal" data-target="#imagemodal" title="Voir ce PV">
+                <i id="pop" class="fa fa-eye icon-large"></i>
+            </a>
+            <a type="button"
+               class="btn btn-warning btn-sm js-update"
+               data-url="{% url 'minute_update' field.id %}" title="Modifier ce PV">
+                <i class="fa fa-edit icon-large"></i>
+            </a>
+            <a type="button"
+               class="btn btn-danger btn-sm js-delete"
+               data-url="{% url 'minute_delete' field.id %}" title="Supprimer ce PV">
+                <i class="fa fa-trash icon-large"></i>
+            </a>
+        </div>
     </td>
 
 </tr>

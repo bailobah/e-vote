@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.template.loader import render_to_string
 from election.forms import ElectionForm, MinuteForm, MinuteFormFilterForm, MinuteUpdateForm
-from election.models import Election, Minute
+from election.models import Election, Minute, PollingStation
 
 
 def save_election_form(request, form, template_name):
@@ -116,9 +116,7 @@ def minute_delete(request, pk):
 
 def minute_create(request):
     data = dict()
-
     if request.method == 'POST':
-
         form = MinuteForm(request.POST, request.FILES)
 
         if form.is_valid():
@@ -126,6 +124,9 @@ def minute_create(request):
             pv.user = request.user
             pv.election_id = 1
             pv.save()
+            station = PollingStation.objects.get(id=pv.polling_id)
+            station.is_active = False
+            station.save()
             data['form_is_valid'] = True
         else:
             data['form_is_valid'] = False

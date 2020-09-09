@@ -17,9 +17,9 @@ SECRET_KEY = config('SECRET_KEY', default='S#perS3crEt_1122')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=False)
-
+#DEBUG = True
 # load production server from .env
-ALLOWED_HOSTS = ['192.168.1.25', '127.0.0.1', '85.170.200.186', config('SERVER', default='localhost')]
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -37,6 +37,13 @@ INSTALLED_APPS = [
     'locality_type',
     'locality',
     'widget_tweaks',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'rest_auth',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'rest_auth.registration',
 ]
 
 MIDDLEWARE = [
@@ -77,7 +84,7 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 DATABASES = {
-   'default': {
+    'default': {
         'ENGINE': 'django.db.backends.mysql',
         'OPTIONS': {
             'read_default_file': '/etc/mysql/evote.cnf',
@@ -104,7 +111,18 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 AUTH_USER_MODEL= 'users.User'
+ACCOUNT_USER_MODEL_USERNAME_FIELD = 'phone_number'
+ACCOUNT_USER_MODEL_EMAIL_FIELD = None
+ACCOUNT_EMAIL_REQUIRED = False
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = 'username'
 
+REST_AUTH_SERIALIZERS = {
+    'LOGIN_SERIALIZER': 'users.serialiser.LoginSerializer',
+    #'TOKEN_SERIALIZER': 'path.to.custom.TokenSerializer',
+
+}
+ACCOUNT_FORMS = {'signup': 'authentication.forms.SignUpForm', 'login' : 'authentication.forms.LoginForm'}
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'authentication.authentication.EmailOrPhoneModelBackend',  # to be able to login with email, described next
@@ -137,7 +155,9 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'core/static'),
 )
 
-MEDIA_URL = '/pv/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'pv/')
+
+MEDIA_ROOT =  os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
 #############################################################
 #############################################################

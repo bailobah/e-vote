@@ -1,6 +1,8 @@
 from django.db import models
 
 # Create your models here.
+from rest_framework import serializers
+
 
 class LocalityType(models.Model):
     name = models.CharField(max_length=100)
@@ -11,3 +13,7 @@ class LocalityType(models.Model):
 
     class Meta:
         db_table = "locality_type"
+class LocalityTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LocalityType
+        fields = ['name', 'description']

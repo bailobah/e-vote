@@ -9,6 +9,7 @@ from django.db.models.signals import post_save
 from django.db import models
 from django.dispatch import receiver
 from django.utils.translation import gettext_lazy as _
+from rest_framework import serializers
 
 from .managers import UserManager
 
@@ -84,24 +85,27 @@ class User(AbstractBaseUser, PermissionsMixin):
         "Does the user have permissions to view the app `app_label`?"
         # Simplest possible answer: Yes, always
         return True
-
-
-class Profile(models.Model):
-
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    birth_date = models.DateField(null=True, blank=True)
-    image = models.ImageField(upload_to='images/')
-    about = models.TextField(default='', blank=True)
-    city = models.CharField(max_length=100, default='', blank=True)
-    country = models.CharField(max_length=100, default='', blank=True)
-    code_postal = models.CharField(max_length=100, default='', blank=True)
-
-    @receiver(post_save, sender=User)
-    def create_user_profile(sender, instance, created, **kwargs):
-        if created:
-            Profile.objects.create(user=instance)
-        instance.profile.save()
-    @receiver(post_save, sender=User)
-    def save_user_profile(sender, instance, **kwargs):
-        instance.profile.save()
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['first_name','last_name','phone_number']
+#
+# class Profile(models.Model):
+#
+#     user = models.OneToOneField(User, on_delete=models.CASCADE)
+#     birth_date = models.DateField(null=True, blank=True)
+#     image = models.ImageField(upload_to='images/')
+#     about = models.TextField(default='', blank=True)
+#     city = models.CharField(max_length=100, default='', blank=True)
+#     country = models.CharField(max_length=100, default='', blank=True)
+#     code_postal = models.CharField(max_length=100, default='', blank=True)
+#
+#     @receiver(post_save, sender=User)
+#     def create_user_profile(sender, instance, created, **kwargs):
+#         if created:
+#             Profile.objects.create(user=instance)
+#         instance.profile.save()
+#     @receiver(post_save, sender=User)
+#     def save_user_profile(sender, instance, **kwargs):
+#         instance.profile.save()
 

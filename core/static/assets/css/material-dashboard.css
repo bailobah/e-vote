@@ -15,7 +15,9 @@
  
 
 /*     brand Colors              */
-
+.form-inline .form-group {
+    margin: 2px 2px;
+}
 .card {
   font-size: .875rem;
 }

@@ -2,17 +2,20 @@
 """
 Copyright (c) 2019 - present AppSeed.us
 """
-
-from django.urls import path
+from django.conf.urls import url
+from django.db import router
+from django.urls import path, include
 from  django.conf.urls.static import static
 from .views import login_view, register_user
 from django.contrib.auth.views import LogoutView
-from users.views import update_profile
+
 from django.conf import settings
 from election import views
 from political_party import views as views_party
-
 from locality_type import views as l_views
+from api import views as api_views
+from rest_framework import routers
+router = routers.DefaultRouter()
 
 l_name = 'locality_type'
 
@@ -21,7 +24,6 @@ urlpatterns = [
     path('login/', login_view, name="login"),
     path('register/', register_user, name="register"),
     path("logout/", LogoutView.as_view(), name="logout"),
-    path('profile/', update_profile, name="update_profile"),
 
     path('election/', views.election_list, name='election_list'),
     path('election/create/', views.election_create, name='election_create'),
@@ -42,8 +44,12 @@ urlpatterns = [
     path('minute/create/', views.minute_create, name='minute_create'),
     path('minute/update/<int:pk>/', views.minute_update, name='minute_update'),
     path('minute/delete/<int:pk>/', views.minute_delete, name='minute_delete'),
-
+    #url(r'^api/', include('rest_framework.urls', namespace='rest_framework')),
+    #url(r'^api/', include(router.urls)),
+    path('api/v1/', include('rest_auth.urls')),
+    path('api/v1/getdata/', api_views.get_data),
+    path('api/v1/account/', include('allauth.urls')),
+    #url(r'^rest-auth/registration/', include('rest_auth.registration.urls')),
 ]
 
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

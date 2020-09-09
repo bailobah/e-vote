@@ -30,23 +30,41 @@
     {% endif %}
     {% endfor %}
 
-    <div class="row" id="dynamic_form">
-      <div class="form-group form-horizontal col-md-12">
-        <label class="control-label"></label>
-        <label class="control-label"></label>
-        <div class="form-inline">
-          <select class="input-small form-control" id="primitive-selector" name="PrimitiveChoose[]">
-            <option value=" " disabled="" selected="">Parti Politique</option>
-            <option value="ufdg">UFDG</option>
-            <option value="rpg">RPG</option>
-          </select>
-          <input type="number" class="input-small form-control" id="vote" name="vote[]" step="any" placeholder="Votes obtenues">
-          <button type="button" class="btn btn-info btn-sm btn-add" id="add_more">
-            <i  class="fa fa-plus icon-large"></i>
-          </button>
+    <div class="row">
+      <div id="education_fields">
+
+      </div>
+      <div class="form-group col-sm-2 col-md-2">
+        <a  type="button" id =""
+            class="btn btn-info btn-sm"
+            title="Ajouter un Parti" onclick="education_fields();">
+          <i id="pop" class="fa fa-plus icon-large"></i>
+        </a>
+      </div>
+      <div class="form-group col-sm-4 col-md-3 nopadding">
+
+        <select class="form-control" id="educationDate" name="educationDate[]">
+
+          <option value="">Pari Politique</option>
+          <option value="ufdg">UFDG</option>
+          <option value="ufr">UFR</option>
+          <option value="rpg">RPG</option>
+
+        </select>
+      </div>
+      <div class="form-group col-sm-4 col-md-3 nopadding">
+        <div class="form-group">
+          <input type="text" class="form-control" id="vote" name="vote[]" value="" placeholder="Nombre de vote">
         </div>
       </div>
     </div>
+
+
+
+
+    <div class="clear"></div>
+  </div>
+  </div>
 
   </div>
   <div class="modal-footer">
