@@ -33,6 +33,7 @@ pwd evote2020
 
 evote2020 server database
 /home/evote/evote/e-vote
+sudo systemctl restart gunicorn
 
 Current-Root-Password
 sudo tail -F /var/log/nginx/error.log
@@ -50,3 +51,5 @@ sudo tail -F /var/log/nginx/error.log
         "nbr_votes_obtained":532
     }
 }
+
+django-cors-headers

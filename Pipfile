@@ -1,0 +1,29 @@
+[[source]]
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+asgiref = "*"
+autopep8 = "*"
+Django = "==2.2.10"
+pycodestyle = "*"
+pytz = "*"
+sqlparse = "*"
+Unipath = "*"
+dj-database-url = "*"
+python-decouple = "*"
+gunicorn = "*"
+whitenoise = "*"
+mysqlclient = "*"
+django-widget-tweaks = "*"
+rest-framework = "*"
+djangorestframework = "*"
+django-rest-auth = "*"
+django-allauth = "*"
+django-cors-headers = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.8"
