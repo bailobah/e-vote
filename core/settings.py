@@ -32,7 +32,7 @@ def ip_addresses():
 
 #ALLOWED_HOSTS = ip_addresses()
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['evote.sabinnov.com']
 #ALLOWED_HOSTS  += ipaddresses()
 # Application definition
 #http://192.168.1.31:8080/login/?next=/
