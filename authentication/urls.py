@@ -6,6 +6,9 @@ from django.conf.urls import url
 from django.db import router
 from django.urls import path, include
 from  django.conf.urls.static import static
+from rest_framework.authtoken.views import obtain_auth_token
+
+from api.views import PollingList, PollingDetails, Login
 from .views import login_view, register_user
 from django.contrib.auth.views import LogoutView
 
@@ -46,9 +49,11 @@ urlpatterns = [
     path('minute/delete/<int:pk>/', views.minute_delete, name='minute_delete'),
     #url(r'^api/', include('rest_framework.urls', namespace='rest_framework')),
     #url(r'^api/', include(router.urls)),
-    path('api/v1/', include('rest_auth.urls')),
-    path('api/v1/getdata/', api_views.get_data),
-    path('api/v1/account/', include('allauth.urls')),
+   # path('api/v1/', include('rest_auth.urls')),
+    path('api/v1/polling/', PollingList.as_view()),
+    path('api/v1/polling_detail/', PollingDetails.as_view()),
+    #path('api/v1/account/', include('allauth.urls')),
+    path('api/v1/login/', Login.as_view(), name='api_token_auth'),
     #url(r'^rest-auth/registration/', include('rest_auth.registration.urls')),
 ]
 

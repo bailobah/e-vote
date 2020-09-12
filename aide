@@ -16,6 +16,7 @@ http://evote.sabinnov.com/
 API http://evote.sabinnov.com/api/v1/login/
 API http://evote.sabinnov.com/api/v1/getdata/
 
+https://micropyramid.com/blog/django-rest-framework-send-extra-context-data-to-serializers/
 
 [database]
 host evote.sabinnov.com
@@ -35,3 +36,17 @@ evote2020 server database
 
 Current-Root-Password
 sudo tail -F /var/log/nginx/error.log
+
+
+{
+"election":1,
+"polling":1,
+"user":"0760618808",
+"nbr_registrants":452,
+ "nbr_voters" : 420,
+ "nbr_invalids_ballots":251,
+ "minute_details":{
+        "political_party_id":1,
+        "nbr_votes_obtained":532
+    }
+}

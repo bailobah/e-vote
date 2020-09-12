@@ -8,7 +8,6 @@ import os
 import netifaces
 from decouple import config
 from unipath import Path
-import dj_database_url
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR    = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -33,11 +32,12 @@ def ip_addresses():
 
 #ALLOWED_HOSTS = ip_addresses()
 
-ALLOWED_HOSTS = ['evote.sabinnov.com']
+ALLOWED_HOSTS = ['*']
 #ALLOWED_HOSTS  += ipaddresses()
 # Application definition
 #http://192.168.1.31:8080/login/?next=/
 #http://85.170.200.186:8080/
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -51,7 +51,7 @@ INSTALLED_APPS = [
     'political_party',
     'locality_type',
     'locality',
-#    'api',
+    'api',
     'widget_tweaks',
     'rest_framework',
     'rest_framework.authtoken',
@@ -60,19 +60,33 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'rest_auth.registration',
+    'corsheaders',
+
 ]
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated', )
+}
+
+CORS_Origin_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    #'django.middleware.clickjacking.XFrameOptionsMiddleware'
+    #'app.cors.CorsMiddleware',
 ]
-
+#pip install django-cors-headers==2.4.0
 ROOT_URLCONF = 'core.urls'
 LOGIN_REDIRECT_URL = "home"   # Route defined in app/urls.py
 LOGOUT_REDIRECT_URL = "home"  # Route defined in app/urls.py
@@ -103,7 +117,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'OPTIONS': {
-            'read_default_file': '/etc/mysql/my.cnf',
+            'read_default_file': '/etc/mysql/evote.cnf',
         },
     }
 }
@@ -131,14 +145,8 @@ ACCOUNT_USER_MODEL_USERNAME_FIELD = 'phone_number'
 ACCOUNT_USER_MODEL_EMAIL_FIELD = None
 ACCOUNT_EMAIL_REQUIRED = False
 ACCOUNT_USERNAME_REQUIRED = False
-ACCOUNT_AUTHENTICATION_METHOD = 'username'
+#ACCOUNT_AUTHENTICATION_METHOD = 'phone_number'
 
-REST_AUTH_SERIALIZERS = {
-    'LOGIN_SERIALIZER': 'users.serialiser.LoginSerializer',
-    #'TOKEN_SERIALIZER': 'path.to.custom.TokenSerializer',
-
-}
-ACCOUNT_FORMS = {'signup': 'authentication.forms.SignUpForm', 'login' : 'authentication.forms.LoginForm'}
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'authentication.authentication.EmailOrPhoneModelBackend',  # to be able to login with email, described next

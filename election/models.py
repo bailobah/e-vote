@@ -6,8 +6,9 @@ from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
 
 from locality.models import Locality, LocalitySerializer
-from political_party.models import PoliticalParty
-from users.models import User
+from political_party.models import PoliticalParty, PoliticalPartySerializer
+from users.models import User, UserSerializer
+
 
 # Create your models here.
 
@@ -100,6 +101,8 @@ class PollingStationSerializer(serializers.ModelSerializer):
 
 def get_pv_path(instance, filename):
     return os.path.join('pvs/{0}/{1}/{2}/{3}'.format(instance.user.id,instance.polling_id,uuid.uuid4(), filename))
+def get_incident_path(instance, filename):
+    return os.path.join('incident/{0}/{1}/{2}/{3}'.format(instance.user.id,instance.polling_id,uuid.uuid4(), filename))
 
 class Minute(models.Model):
     election = models.ForeignKey(Election, verbose_name=_('Election'), on_delete=models.CASCADE, null=False)
@@ -110,10 +113,17 @@ class Minute(models.Model):
     nbr_invalids_ballots = models.IntegerField(_('Total des bulletins nuls'),blank=False, null=False)
     nbr_votes_cast = models.IntegerField(_('Suffrage valablement exprimé'), blank=False, null=False)
     image = models.FileField(_('Photo du PV'),
-                                   upload_to= get_pv_path,
-                                   blank=False,
-                                   null=False
-                                   )
+                             upload_to= get_pv_path,
+                             blank=False,
+                             null=False
+                             )
+    incident = models.BooleanField(default=False)
+    comment = models.TextField()
+    file = models.FileField(_('Photo de l\'incident'),
+                     upload_to=get_incident_path,
+                     blank=False,
+                     null=False
+                     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -121,19 +131,40 @@ class Minute(models.Model):
         db_table = "minute"
         ordering = ['-id']
 
-class MinuteSerializer(serializers.ModelSerializer):
-    def create(self, validated_data):
-        Minute.objects.create(**validated_data)
-
-    class Meta:
-        model = Minute
-        fields = ['nbr_registrants', 'nbr_voters', 'nbr_invalids_ballots']
-
 class MinuteDetails(models.Model):
-    polling = models.ForeignKey(PollingStation, on_delete=models.CASCADE, null=False)
-    id_political_party = models.ForeignKey(PoliticalParty, on_delete=models.CASCADE, null=False)
+    minute = models.ForeignKey(Minute, on_delete=models.CASCADE, null=False)
+    political_party = models.ForeignKey(PoliticalParty, on_delete=models.CASCADE, null=False)
     nbr_votes_obtained = models.IntegerField(blank=False, null=False)
+    description = models.CharField(max_length=100)
+
 
     class Meta:
         db_table = "minute_details"
+
+class MinuteDetailsSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = MinuteDetails
+        fields = ['political_party','nbr_votes_obtained']
+
+
+class MinuteSerializer(serializers.ModelSerializer):
+    minute_details = MinuteDetailsSerializer(many=True)
+
+    class Meta:
+        model = Minute
+        fields = ['election','polling','user','nbr_registrants', 'nbr_votes_cast','nbr_voters', 'nbr_invalids_ballots','image','minute_details']
+
+    def create(self, validated_data):
+
+        minute_details = validated_data.pop('minute_details')
+
+        minute = Minute.objects.create(**validated_data)
+        for minute_detail in minute_details:
+            print(minute_details)
+            MinuteDetails.objects.create(minute=minute, **minute_detail)
+        return minute
+
+
+
 

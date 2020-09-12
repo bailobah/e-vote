@@ -2,7 +2,7 @@ from django.db import models
 
 # Create your models here.
 
-
+from rest_framework import serializers
 
 class PoliticalParty(models.Model):
 
@@ -13,3 +13,9 @@ class PoliticalParty(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     class Meta:
         db_table = "political_party"
+
+class PoliticalPartySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PoliticalParty
+        fields = '__all__'
+

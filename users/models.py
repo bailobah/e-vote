@@ -88,7 +88,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['first_name','last_name','phone_number']
+        fields = '__all__'
 #
 # class Profile(models.Model):
 #
