@@ -81,8 +81,8 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.common.CommonMiddleware',
+    # 'corsheaders.middleware.CorsMiddleware',
+    # 'django.middleware.common.CommonMiddleware',
     #'django.middleware.clickjacking.XFrameOptionsMiddleware'
     #'app.cors.CorsMiddleware',
 ]
@@ -142,9 +142,9 @@ AUTH_PASSWORD_VALIDATORS = [
 
 AUTH_USER_MODEL= 'users.User'
 ACCOUNT_USER_MODEL_USERNAME_FIELD = 'phone_number'
-ACCOUNT_USER_MODEL_EMAIL_FIELD = None
-ACCOUNT_EMAIL_REQUIRED = False
-ACCOUNT_USERNAME_REQUIRED = False
+# ACCOUNT_USER_MODEL_EMAIL_FIELD = None
+# ACCOUNT_EMAIL_REQUIRED = False
+# ACCOUNT_USERNAME_REQUIRED = False
 #ACCOUNT_AUTHENTICATION_METHOD = 'phone_number'
 
 AUTHENTICATION_BACKENDS = [

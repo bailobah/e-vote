@@ -21,7 +21,7 @@ class PollingList(APIView):
     def get(self, request):
 
         localitys = Allocation.objects.filter(user=request.user).values('locality_id')
-        polling = PollingStation.objects.filter(locality__in=localitys)#.filter(is_active=True)
+        polling = PollingStation.objects.filter(locality__in=localitys).filter(is_active=True)
         serializer = PollingStationSerializer(polling, many=True)
         return JsonResponse({'data': serializer.data, 'user': UserSerializer(request.user).data}, safe=False, status=status.HTTP_200_OK)
 
@@ -36,7 +36,7 @@ class PollingDetails(APIView):
 
         if serializer.is_valid(raise_exception=True):
             serializer.save()
-            return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
+            return JsonResponse({'message':'ok'}, status=status.HTTP_201_CREATED)
         return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 

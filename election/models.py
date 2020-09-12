@@ -161,8 +161,9 @@ class MinuteSerializer(serializers.ModelSerializer):
 
         minute = Minute.objects.create(**validated_data)
         for minute_detail in minute_details:
-            print(minute_details)
             MinuteDetails.objects.create(minute=minute, **minute_detail)
+            #details = MinuteDetails.objects.create(minute=minute, **minute_detail)
+            #minute.minute_details.add(details)
         return minute
 
 
