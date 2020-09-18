@@ -25,7 +25,7 @@ class MinuteUpdateForm(forms.ModelForm):
 class MinuteForm(forms.ModelForm):
     # election = forms.IntegerField(required=False, widget=forms.widgets.HiddenInput())
     # user = forms.IntegerField(required=False, widget=forms.widgets.HiddenInput())
-
+    image = forms.ImageField(widget=forms.FileInput)
     class Meta:
         model = Minute
         exclude = ['updated_at','created_at',]
@@ -34,7 +34,7 @@ class MinuteForm(forms.ModelForm):
 
         super(MinuteForm, self).__init__(*args, **kwargs)
         self.user = user #kwargs.pop('user', None)
-        print("========================")
+
         print(self.user)
         localitys = Allocation.objects.filter(user=self.user).values('locality_id')
         self.fields['polling'].queryset = PollingStation.objects.filter(locality__in=localitys).filter(is_active=True)
@@ -53,6 +53,6 @@ class MinuteDetailForm(forms.ModelForm):
 
 
 MinuteDetailsFormset = inlineformset_factory(
-    Minute, MinuteDetails, form=MinuteDetailForm, extra=1, max_num=13,can_delete=True
+    Minute, MinuteDetails, form=MinuteDetailForm, extra=1, max_num=11,can_delete=True
 )
 
