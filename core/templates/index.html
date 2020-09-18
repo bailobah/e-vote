@@ -30,8 +30,8 @@
             <div class="card-icon">
               <i class="material-icons">how_to_vote</i>
             </div>
-            <p class="card-category">Nombre total de votant</p>
-            <h3 class="card-title">6 000 000</h3>
+            <p class="card-category">Nombre de votant</p>
+            <h3 class="card-title">{{ nbr_registrants.nbr_registrants__sum }}</h3>
           </div>
           <div class="card-footer">
             <div class="stats">
@@ -46,8 +46,8 @@
             <div class="card-icon">
               <i class="material-icons">how_to_vote</i>
             </div>
-            <p class="card-category">Nombre total de votes valides</p>
-            <h3 class="card-title">5 000 000</h3>
+            <p class="card-category">Suffrage exprimé</p>
+            <h3 class="card-title">{{ nbr_voters.nbr_voters__sum }}</h3>
           </div>
           <div class="card-footer">
             <div class="stats">
@@ -63,7 +63,7 @@
               <i class="material-icons">how_to_vote</i>
             </div>
             <p class="card-category">Bulletins nulls</p>
-            <h3 class="card-title">200 000 </h3>
+            <h3 class="card-title">{{ nbr_invalids_ballots.nbr_invalids_ballots__sum }}</h3>
           </div>
           <div class="card-footer">
             <div class="stats">
@@ -83,8 +83,8 @@
             <div class="card-icon">
               <i class="material-icons">store</i>
             </div>
-            <p class="card-category">Nombre total de bureau de vote</p>
-            <h3 class="card-title">1 000 000</h3>
+            <p class="card-category">Total de bureau de vote</p>
+            <h3 class="card-title">{{ nbr_votes_cast.nbr_votes_cast__sum }}</h3>
           </div>
           <div class="card-footer">
             <div class="stats">

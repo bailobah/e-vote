@@ -61,8 +61,15 @@ INSTALLED_APPS = [
     'allauth.account',
     'rest_auth.registration',
     'corsheaders',
+    'crispy_forms',
+    "bootstrap4",
+    'dbs_fields',
+    'bootstrapform',
+    'django_forms_bootstrap'
 
 ]
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',

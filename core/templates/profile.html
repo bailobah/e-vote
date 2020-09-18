@@ -11,11 +11,10 @@
   <div class="col-md-8">
     <div class="card">
       <div class="card-header card-header-primary">
-        <h4 class="card-title">Edit Profile</h4>
-        <p class="card-category">Complete your profile</p>
+        <h6 class="card-title">Edit Profile</h6>
       </div>
       <div class="card-body">
-        <form role="form" method="post" action="{% url 'update_profile' %}" >
+        <form role="form" method="post" action="#" >
 
           {% csrf_token %}
           <div class="row">
@@ -28,7 +27,7 @@
             <div class="col-md-6">
               <div class="form-group">
                 <label class="bmd-label-floating">Phone Number</label>
-                <input type="text" class="form-control" value=" {{ user.phone_number }}">
+                <input type="text" class="form-control" disabled value="{{ request.user.id }}">
               </div>
             </div>
           </div>
@@ -72,8 +71,7 @@
               <div class="form-group">
                 <label>About Me</label>
                 <div class="form-group">
-                  <label class="bmd-label-floating"> Lamborghini Mercy, Your chick she so thirsty, I'm in that two seat Lambo.</label>
-                  <textarea class="form-control" rows="5" value="{{ profile.code_postal }}"></textarea>
+                  <textarea class="form-control" rows="5" disabled value="">{{  user.phone_number }}</textarea>
                 </div>
               </div>
             </div>
@@ -121,3 +119,35 @@
 
 <!-- Specific Page JS goes HERE  -->
 {% block javascripts %}{% endblock javascripts %}
+
+
+<div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <table class="table" id="table">
+                                <thead>
+                                <tr>
+                                    <th>Parti </th>
+                                    <th>Votes obtenues</th>
+
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <body>
+                                {% for field in minute_details %}
+                                <tr>
+                                    <td><li>{{ field.political_party.name }}</li></td>
+                                    <td>{{ field.nbr_votes_obtained }} </td>
+                                </tr>
+
+                                {% empty %}
+                                <tr>
+                                    <div class="text-center bg-warning btn-block">Zero parti enregistré</div>
+                                </tr>
+                                {% endfor %}
+                                </body>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>

@@ -19,3 +19,4 @@ unipath
 python-decouple
 
 django-cors-headers
+django-crispy-forms
