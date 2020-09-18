@@ -1,6 +1,6 @@
 {% extends "layouts/base.html" %}
 
-{% block title %} Table des PVs {% endblock %}
+{% block title %} Les PVs collectés {% endblock %}
 
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}
@@ -9,7 +9,7 @@
 
 {% block content %}
 <p>
-    <a type="button" class="btn btn-outline-success" href="{% url 'minute_create' %}">
+    <a type="button" class="btn btn-outline-success js-create" href="{% url 'minute_create' %}">
         <span class="glyphicon glyphicon-plus"></span>
         Ajouter un PV
     </a>
@@ -74,7 +74,7 @@
     <span class="step-links">
         {% if data.has_previous %}
             <a href="?page=1">&laquo; first</a>
-            <a href="?page={{ elections.previous_page_number }}">previous</a>
+            <a href="?page={{ data.previous_page_number }}">previous</a>
         {% endif %}
 
         <span class="current">

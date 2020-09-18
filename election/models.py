@@ -149,9 +149,6 @@ class MinuteDetailsSerializer(serializers.ModelSerializer):
 
 class MinuteSerializer(serializers.ModelSerializer):
     minute_details = MinuteDetailsSerializer(many=True)
-    # nbr_voters = serializers.IntegerField()
-    # nbr_voters = serializers.IntegerField()
-    # nbr_votes_cast = serializers.SerializerMethodField()
 
     class Meta:
         model = Minute

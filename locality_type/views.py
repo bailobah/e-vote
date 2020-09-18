@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import render
 
 # Create your views here.
@@ -25,8 +26,16 @@ def save_locality_type_form(request, form, template_name):
     return JsonResponse(data)
 
 def locality_type_list(request):
-
-    return render(request, f'{name}/ui-{name}.html', { name + 's' : LocalityType.objects.all()})
+    locality_list = LocalityType.objects.all()
+    page = request.GET.get('page', 1)
+    paginator = Paginator(locality_list, 20)
+    try:
+        locality_tpes = paginator.page(page)
+    except PageNotAnInteger:
+        locality_tpes = paginator.page(1)
+    except EmptyPage:
+        locality_tpes = paginator.page(paginator.num_pages)
+    return render(request, f'{name}/ui-{name}.html', { name + 's' : locality_tpes})
 
 def locality_type_delete(request, pk):
     locality_type = get_object_or_404(LocalityType, pk=pk)

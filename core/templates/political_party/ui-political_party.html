@@ -7,19 +7,20 @@
 
 {% block content %}
 <p>
-  <button type="button" class="btn btn-primary js-create-political_party" data-url="{% url 'political_party_create' %}">
+  <button type="button" class="btn btn-outline-success js-create-political_party" data-url="{% url 'political_party_create' %}">
     <span class="glyphicon glyphicon-plus"></span>
     Ajouter un parti
   </button>
 </p>
-<table class="table" id="political_party-table">
+<table class="table table-dark table-striped" id="political_party-table">
   <thead>
-  <tr>
+  <tr class="bg-success">
     <th>Box</th>
     <th>ID</th>
     <th>Nom</th>
     <th>Actif</th>
     <th>Description</th>
+    <th>Action</th>
   </tr>
   </thead>
   <tbody>
@@ -37,16 +38,16 @@
     <td>{{ political_party.is_active }}</td>
     <td>{{ political_party.description }}</td>
     <td>
-      <button type="button"
+      <a type="button"
               class="btn btn-warning btn-sm js-update-political_party"
-              data-url="{% url 'political_party_update' political_party.id %}">
-        <span class="glyphicon glyphicon-pencil"></span> Editer
-      </button>
-      <button type="button"
+              data-url="{% url 'political_party_update' political_party.id %}" title="Modifier">
+        <i class="fa fa-edit icon-large"></i>
+      </a>
+      <a type="button"
               class="btn btn-danger btn-sm js-delete-political_party"
-              data-url="{% url 'political_party_delete' political_party.id %}">
-        <span class="glyphicon glyphicon-trash"></span> Supprimer
-      </button>
+              data-url="{% url 'political_party_delete' political_party.id %}" title="Supprimer">
+        <i class="fa fa-trash icon-large"></i>
+      </a>
     </td>
 
   </tr>

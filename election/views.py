@@ -151,9 +151,9 @@ def save_minute_form(request, form, template_name):
         if form.is_valid():
             form.save()
             data['form_is_valid'] = True
-
+            minutes = Minute.objects.all()
             data['html_list'] = render_to_string('minute/list.html', {
-                'minutes': Minute.objects.all()
+                'minutes': minutes
             })
         else:
             data['form_is_valid'] = False

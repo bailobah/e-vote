@@ -9,64 +9,78 @@
 
 {% load bootstrap %}
 
-<div>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-10" style="padding-top: 40px;">
-                <div class="card shadow mb-4" style="padding: 0;padding-top: 2;">
-                    <form method="post" action="" class="" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        {% for hidden in form.hidden_fields %}
-                        {{ hidden }}
-                        {% endfor %}
-                        <fieldset>
-                            {{ form.non_field_errors }}
-                            {{ form|bootstrap }}
-                        </fieldset>
-                        <fieldset>
-                            <table class="col-md-9" style="margin-left: 10px;">
-                                {{ minute_details.management_form }}
-
-                                {% for form in minute_details.forms %}
-                                {% if forloop.first %}
-                                <thead>
-                                <tr>
-                                    {% for field in form.visible_fields %}
-                                    <th>{{ field.label }}</th>
-                                    {% endfor %}
-                                </tr>
-                                </thead>
-                                {% endif %}
-                                <tr class="{% cycle 'row1' 'row2' %} formset_row-{{ minute_details.prefix }}">
-                                    {% for field in form.visible_fields %}
-                                    <td>
-                                        {# Include the hidden fields in the form #}
-                                        {% if forloop.first %}
-                                        {% for hidden in form.hidden_fields %}
-                                        {{ hidden }}
-                                        {% endfor %}
-                                        {% endif %}
-                                        {% if form.type.errors %}
-                                        <span class="error-text" style="margin-left: 0;">{{ form.type.errors.as_text }}</span>
-                                        {% endif %}
-                                        {{ field.errors.as_ul }}
-                                        {{ field }}
-                                    </td>
-                                    {% endfor %}
-                                </tr>
-                                {% endfor %}
-                            </table>
-                        </fieldset>
-
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
-                            <button type="submit" class="btn btn-outline-info">Créer</button>
+<div class="row">
+    <div class="col-md-10" style="padding-top: 40px;">
+        <div class="card">
+            <div class="card-header card-header-success">
+                <h6 class="">Collection pv de l'election  {{ form.election.name }}</h6>
+            </div>
+            <div class="card-body">
+                <form method="post" action="" class="" enctype="multipart/form-data">
+                    <div class="row">
+                        <div class="col-md-4">
+                            {% csrf_token %}
+                            {% for hidden in form.hidden_fields %}
+                            {{ hidden }}
+                            {% endfor %}
+                            <fieldset>
+                                {{ form.non_field_errors }}
+                                {{ form|bootstrap }}
+                            </fieldset>
                         </div>
-                    </form>
-                </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <fieldset>
+                                    <table class="col-md-8" style="margin-left: 10px;">
+                                        {{ minute_details.management_form }}
+
+                                        {% for form in minute_details.forms %}
+                                        {% if forloop.first %}
+                                        <thead>
+                                        <tr>
+                                            {% for field in form.visible_fields %}
+                                            <th>{{ field.label }}</th>
+                                            {% endfor %}
+                                        </tr>
+                                        </thead>
+                                        {% endif %}
+                                        <tr class="{% cycle 'row1' 'row2' %} formset_row-{{ minute_details.prefix }}">
+                                            {% for field in form.visible_fields %}
+                                            <td>
+                                                {# Include the hidden fields in the form #}
+                                                {% if forloop.first %}
+                                                {% for hidden in form.hidden_fields %}
+                                                {{ hidden }}
+                                                {% endfor %}
+                                                {% endif %}
+                                                {% if form.type.errors %}
+                                                <span class="error-text" style="margin-left: 0;">{{ form.type.errors.as_text }}</span>
+                                                {% endif %}
+                                                {{ field.errors.as_ul }}
+                                                {{ field }}
+                                            </td>
+                                            {% endfor %}
+                                        </tr>
+                                        {% endfor %}
+                                    </table>
+                                </fieldset>
+                                 <div> </div>
+                                <div class="modal-footer">
+                                    <a type="button" class="btn btn-default" href="{% url 'minute_list'%}" title="Liste des pvs collectés"><i class="fa fa-list" aria-hidden="true"></i>
+                                    </a>
+                                    <button type="submit" class="btn btn-success pull-right">Créer le pv</button>
+                                </div>
+                            </div>
+<div class="clearfix"></div>
+                        </div>
+                    </div>
+                </form>
+
             </div>
         </div>
     </div>
+</div>
+
 </div>
 {% endblock content %}
 

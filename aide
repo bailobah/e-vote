@@ -53,3 +53,16 @@ sudo tail -F /var/log/nginx/error.log
 }
 
 django-cors-headers
+
+deployement en prod
+pull sur git
+install pip
+lance migration *
+
+python3 manage.py makemigrations
+python3 manage.py migrate
+
+gunicorn core.wsgi:application --bind=unix:/tmp/gunicorn.sock
+
+python3 manage.py migrate
+sudo systemctl restart gunicorn

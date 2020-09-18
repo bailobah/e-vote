@@ -53,6 +53,6 @@ class MinuteDetailForm(forms.ModelForm):
 
 
 MinuteDetailsFormset = inlineformset_factory(
-    Minute, MinuteDetails, form=MinuteDetailForm, extra=1, max_num=3,can_delete=True
+    Minute, MinuteDetails, form=MinuteDetailForm, extra=1, max_num=13,can_delete=True
 )
 
