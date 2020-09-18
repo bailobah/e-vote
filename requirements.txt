@@ -17,6 +17,5 @@ django-rest-auth
 django-allauth
 unipath
 python-decouple
-
 django-cors-headers
 django-crispy-forms

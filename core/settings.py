@@ -63,7 +63,6 @@ INSTALLED_APPS = [
     'corsheaders',
     'crispy_forms',
     "bootstrap4",
-    'dbs_fields',
     'bootstrapform',
     'django_forms_bootstrap'
 
