@@ -12,10 +12,8 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),          # Django admin route
     path("", include("authentication.urls")), # Auth routes - login / register
-    path("", include("app.urls")) ,            # UI Kits Html files
-
-    # url(r'^api/', include(router.urls)),
-
+    path("", include("app.urls")),            # UI Kits Html files
+    #url(r'^api/', include(router.urls)),
     #path("", include("election.urls")) ,           # UI Kits Html files
     #path("political_party", include("political_party.urls"), name='party') ,           # UI Kits Html files
 ]
