@@ -1,0 +1,130 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}  {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header card-header-success">
+                <h6 class="">Commune de  {{ minute.polling.locality.name }}</h6>
+                <!--        <p class="card-category">Complete your profile</p>-->
+            </div>
+            <div class="card-header alert alert-success">
+                <h6 class="card-title">Bureau du vote : {{ minute.polling.name }}, N° ({{ minute.polling.numero }})</h6>
+                <!--        <p class="card-category">Complete your profile</p>-->
+            </div>
+            <div class="card-body">
+
+                {% csrf_token %}
+                <div class="row">
+
+                    <div class="col-md-4 user-pad text-center">
+                        <h5>Nombre d'inscrits</h5>
+                        <h4>{{ minute.nbr_registrants }}</h4>
+                    </div>
+                    <div class="col-md-4 user-pad text-center">
+                        <h5>Nombre de votants</h5>
+                        <h4>{{ minute.nbr_voters }}</h4>
+                    </div>
+                    <div class="col-md-4 user-pad text-center">
+                        <h5>Suffrage exprimé</h5>
+                        <h4>{{ minute.nbr_votes_cast }}</h4>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 user-pad text-center">
+                        <h5>Bulletins nuls</h5>
+                        <h4>{{ minute.nbr_invalids_ballots }}</h4>
+                    </div>
+                    <div class="col-md-4 user-pad text-center">
+                        <h5>Incident signalé</h5>
+                        <label class="checkbox success">
+
+                            <input type="hidden" name="done" value="" />
+                            <input type="checkbox" name="done" value="on" {% if minute.incident %} checked {% endif %}>
+                            {% if minute.incident %}
+                            <input type="hidden" name="done" value="on" />
+                            {% endif %}
+
+                        </label>
+                    </div>
+
+                </div>
+
+
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <h5>Rapport incident</h5>
+
+                            <div class="form-group">
+                                <textarea class="form-control" rows="5" value="">{{ minute.comment }}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-header alert alert-success">
+                    <h6 class="card-title">Nombre de votes par parti </h6>
+                </div>
+                <div class=".table-responsive">
+
+                    <table class="table table-dark table-striped" id="table">
+                        <thead>
+                        <tr  class="bg-success">
+                            <th>Parti </th>
+                            <th>Votes obtenues</th>
+
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <body>
+                        {% for field in minute_details %}
+                        <tr>
+                            <td><li>{{ field.political_party.name }}</li></td>
+                            <td>{{ field.nbr_votes_obtained }} </td>
+                        </tr>
+
+                        {% empty %}
+                        <tr>
+                            <div class="text-center bg-warning btn-block">Zero parti enregistré</div>
+                        </tr>
+                        {% endfor %}
+                        </body>
+                        </tbody>
+                    </table>
+
+                </div>
+                <button type="submit" name="profile" class="btn btn-success pull-right">Modifier le PV</button>
+                <div class="clearfix"></div>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card card-profile">
+            <a href="#pv">
+                <img src="{{ minute.image.url }}" style="max_height:100%; width:100%;">
+            </a>
+            <div class="card-body">
+                <label class="bmd-label-floating">Information du centralisateur :</label>
+                <h4 class="card-category text-gray">
+                    {{ minute.user.first_name }}  {{ minute.user.last_name}}
+                </h4>
+                <h4 class="card-title">
+                    {{ minute.user.phone_number }}
+                </h4>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

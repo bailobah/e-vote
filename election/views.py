@@ -1,9 +1,13 @@
-from django.http import JsonResponse
-from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.http import JsonResponse, HttpResponseRedirect
+from django.shortcuts import render, get_object_or_404
 from django.template.loader import render_to_string
-from election.forms import ElectionForm, MinuteForm, MinuteFormFilterForm, MinuteUpdateForm
-from election.models import Election, Minute, PollingStation
+from django.urls import reverse_lazy
+from django.views.generic.edit import CreateView
+
+from election.forms import ElectionForm, MinuteForm, MinuteUpdateForm, MinuteDetailsFormset
+from election.models import Election, Minute, PollingStation, MinuteDetails
+from political_party.models import PoliticalParty
 
 
 def save_election_form(request, form, template_name):
@@ -114,30 +118,32 @@ def minute_delete(request, pk):
                                              request=request,)
     return JsonResponse(data)
 
-def minute_create(request):
-    data = dict()
-    if request.method == 'POST':
-        form = MinuteForm(request.POST, request.FILES)
 
-        if form.is_valid():
-            pv = form.save(commit=False)
-            pv.user = request.user
-            pv.election_id = 1
-            pv.save()
-            station = PollingStation.objects.get(id=pv.polling_id)
-            station.is_active = False
-            station.save()
-            data['form_is_valid'] = True
-        else:
-            data['form_is_valid'] = False
-    else:
-        form = MinuteFormFilterForm(request.user)
-
-    data['html_form'] = render_to_string('minute/create.html',
-                                         {'form': form},
-                                         request=request
-                                         )
-    return JsonResponse(data)
+# def minute_create(request):
+#     data = dict()
+#     if request.method == 'POST':
+#         form = MinuteDetailsFormset(request.POST, request.FILES)
+#         details_instances = MinuteDetailsFormset(request.POST)
+#
+#         if form.is_valid():
+#             pv = form.save(commit=False)
+#             pv.user = request.user
+#             pv.election_id = 1
+#             pv.save()
+#             station = PollingStation.objects.get(id=pv.polling_id)
+#             station.is_active = False
+#             station.save()
+#             data['form_is_valid'] = True
+#         else:
+#             data['form_is_valid'] = False
+#     else:
+#         form = MinuteDetailsFormset(user= request.user)
+#
+#     data['html_form'] = render_to_string('minute/create.html',
+#                                          {'form': form},
+#                                          request=request
+#                                          )
+#     return JsonResponse(data)
 
 def save_minute_form(request, form, template_name):
     data = dict()
@@ -162,3 +168,80 @@ def minute_update(request, pk):
     else:
         form = MinuteUpdateForm(instance=data)
     return save_minute_form(request, form, 'minute/update.html')
+
+def minute_detail(request, pk):
+    minute = get_object_or_404(Minute, pk=pk)
+    minute_details = MinuteDetails.objects.filter(minute_id=pk).all()
+    return render(request,'minute/minute_detail_view.html',
+                  {'minute' : minute, 'minute_details': minute_details})
+
+def load_cities(request):
+
+    political_partis = PoliticalParty.objects.all.order_by('name')
+    return render(request, 'minute/political_dropdown_list_options.html', {'political_partis': political_partis})
+
+
+class MinuteCreate(CreateView):
+    model = Minute
+    template_name = 'minute/create.html'
+    form_class = MinuteForm
+    success_url = 'None'
+
+    def get_form_kwargs(self):
+        kwargs = super(MinuteCreate, self).get_form_kwargs()
+        kwargs.update({'user': self.request.user})
+        return kwargs
+
+    def get_initial(self):
+        self.initial.update({'user': self.request.user})
+        return self.initial
+
+    def get(self, request, *args, **kwargs):
+
+        self.object = None
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        minute_details = MinuteDetailsFormset()
+        form.fields['election'].initial =  get_object_or_404(Election, pk=1)
+
+        return self.render_to_response(
+            self.get_context_data(form=form,
+                                  minute_details=minute_details))
+
+    def post(self, request, *args, **kwargs):
+
+        self.object = None
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+
+        minute_details = MinuteDetailsFormset(self.request.POST, self.request.FILES)
+
+        if (form.is_valid() and minute_details.is_valid()):
+            return self.form_valid(form, minute_details)
+        else:
+            return self.form_invalid(form, minute_details)
+
+    def form_valid(self, form, minute_details):
+
+        self.object = form.save(commit=False)
+        self.object.nbr_votes_cast = self.object.nbr_voters - self.object.nbr_invalids_ballots
+        self.object.save()
+
+        minute_details_table = minute_details.save(commit=False)
+        for td in minute_details_table:
+            td.minute = self.object
+            td.save()
+
+        ps = PollingStation.objects.get(id=self.object.polling_id)
+        ps.is_active = False
+        ps.save()
+        return HttpResponseRedirect(self.get_success_url())
+
+    def form_invalid(self, form, minute_details):
+        return self.render_to_response(
+            self.get_context_data(form=form,
+                                  minute_details=minute_details
+                                  )
+        )
+    def get_success_url(self):
+        return reverse_lazy('minute_detail', kwargs={'pk': self.object.pk})

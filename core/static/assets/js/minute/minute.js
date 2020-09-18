@@ -67,28 +67,19 @@ function upload(event) {
 }
 
 
+
 function showModal(event) {
     event.preventDefault();
     var id = $(this).data('id');
     $('#imagepreview').attr('src', id);
     $('#imagemodal').modal('show');
 }
-
-var room = 1;
-function education_fields() {
-
-    room++;
-    var objTo = document.getElementById('education_fields')
-    var divtest = document.createElement("div");
-	divtest.setAttribute("class", "form-group removeclass"+room);
-	var rdiv = 'removeclass'+room;
-    divtest.innerHTML = '<div class="form-group col-sm-2 col-md-2"> <a  type="button" id ="" class="btn btn-info btn-sm" title="Ajouter un Parti"><i id="pop" class="fa fa-plus icon-large"></i> </a></div><div class="form-group col-sm-4 col-md-3 nopadding"><div class="form-group"><div class="input-group"> <select class="form-control" id="educationDate" name="educationDate[]"><option value="">Parti Politique</option><option value="ufr">UFR</option><option value="ufdg">UFDG</option><option value="rpg">RPG</option> </select><div class="input-group-btn"> <button class="btn btn-danger" type="button" onclick="remove_education_fields('+ room +');"> <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> </button></div></div></div><div class="form-group col-sm-4 col-md-3 nopadding"><div class="form-group"> <input type="text" class="form-control" id="vote" name="vote[]" value="" placeholder="vote"></div></div><div class="clear"></div>';
-
-    objTo.appendChild(divtest)
-}
-   function remove_education_fields(rid) {
-	   $('.removeclass'+rid).remove();
-   }
+/*
+    $('.formset_row-{{ formset.prefix }}').formset({
+        addText: 'Ajouter un parti',
+        deleteText: 'remove',
+        prefix: 'minute_details_set'
+    });*/
 
     $('.show').click( showModal);
     // Create election
@@ -102,8 +93,8 @@ function education_fields() {
     //Delection election
     $("#table").on("click", ".js-delete", loadForm);
     $("#modal").on("submit", ".js-delete-form", saveForm);
-});
 
+});
 
 
 

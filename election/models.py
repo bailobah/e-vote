@@ -4,6 +4,7 @@ import uuid
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
+from rest_framework.generics import get_object_or_404
 
 from locality.models import Locality, LocalitySerializer
 from political_party.models import PoliticalParty, PoliticalPartySerializer
@@ -106,24 +107,24 @@ def get_incident_path(instance, filename):
 
 class Minute(models.Model):
     election = models.ForeignKey(Election, verbose_name=_('Election'), on_delete=models.CASCADE, null=False)
-    polling = models.ForeignKey(PollingStation, verbose_name=_('Numero du bureau de vote'), on_delete=models.CASCADE, null=False)
-    user = models.ForeignKey(User,verbose_name=_('Centralisateur'), on_delete=models.CASCADE, null=False)
-    nbr_registrants = models.IntegerField(_('Nombre d\'inscrits'), blank=False, null=False)
+    polling = models.ForeignKey(PollingStation, verbose_name=_('Bureau de vote'), on_delete=models.CASCADE, null=False)
+    user = models.ForeignKey(User, verbose_name=_('Centralisateur'), on_delete=models.CASCADE, null=False)
+    nbr_registrants = models.IntegerField(_('Nombre d\'inscrits'), blank=True, null=False)
     nbr_voters = models.IntegerField(_('Nombre de votants'),blank=False, null=False)
-    nbr_invalids_ballots = models.IntegerField(_('Total des bulletins nuls'),blank=False, null=False)
-    nbr_votes_cast = models.IntegerField(_('Suffrage valablement exprimé'), blank=False, null=False)
+    nbr_invalids_ballots = models.IntegerField(_('Bulletins nuls'),blank=False, null=False)
+    nbr_votes_cast = models.IntegerField(_('Suffrage valablement exprimé'), blank=True, null=False)
     image = models.FileField(_('Photo du PV'),
                              upload_to= get_pv_path,
                              blank=False,
                              null=False
                              )
     incident = models.BooleanField(default=False)
-    comment = models.TextField()
+    comment = models.TextField(blank=True)
     file = models.FileField(_('Photo de l\'incident'),
-                     upload_to=get_incident_path,
-                     blank=False,
-                     null=False
-                     )
+                            upload_to=get_incident_path,
+                            blank=True,
+                            null=False
+                            )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -135,8 +136,6 @@ class MinuteDetails(models.Model):
     minute = models.ForeignKey(Minute, on_delete=models.CASCADE, null=False)
     political_party = models.ForeignKey(PoliticalParty, on_delete=models.CASCADE, null=False)
     nbr_votes_obtained = models.IntegerField(blank=False, null=False)
-    description = models.CharField(max_length=100)
-
 
     class Meta:
         db_table = "minute_details"
@@ -150,21 +149,47 @@ class MinuteDetailsSerializer(serializers.ModelSerializer):
 
 class MinuteSerializer(serializers.ModelSerializer):
     minute_details = MinuteDetailsSerializer(many=True)
+    # nbr_voters = serializers.IntegerField()
+    # nbr_voters = serializers.IntegerField()
+    # nbr_votes_cast = serializers.SerializerMethodField()
 
     class Meta:
         model = Minute
-        fields = ['election','polling','user','nbr_registrants', 'nbr_votes_cast','nbr_voters', 'nbr_invalids_ballots','image','minute_details']
+        fields = ['polling','user','nbr_registrants', 'nbr_votes_cast','nbr_voters', 'nbr_invalids_ballots','image','incident','comment','file','minute_details']
 
     def create(self, validated_data):
 
         minute_details = validated_data.pop('minute_details')
+        validated_data['election'] = get_object_or_404(Election, pk=1)
+        validated_data['nbr_votes_cast'] = int(validated_data['nbr_voters']) - int(validated_data['nbr_invalids_ballots'])
+        validated_data['nbr_registrants'] = 500
 
         minute = Minute.objects.create(**validated_data)
         for minute_detail in minute_details:
             MinuteDetails.objects.create(minute=minute, **minute_detail)
-            #details = MinuteDetails.objects.create(minute=minute, **minute_detail)
-            #minute.minute_details.add(details)
+
+        ps = PollingStation.objects.get(id=minute.polling_id)
+        ps.is_active = False
+        ps.save()
         return minute
+
+    def update(self, instance, validated_data):
+        albums_data = validated_data.pop('album_musician')
+        albums = (instance.album_musician).all()
+        albums = list(albums)
+        instance.first_name = validated_data.get('first_name', instance.first_name)
+        instance.last_name = validated_data.get('last_name', instance.last_name)
+        instance.instrument = validated_data.get('instrument', instance.instrument)
+        instance.save()
+
+        for album_data in albums_data:
+            album = albums.pop(0)
+            album.name = album_data.get('name', album.name)
+            album.release_date = album_data.get('release_date', album.release_date)
+            album.num_stars = album_data.get('num_stars', album.num_stars)
+            album.save()
+        return instance
+
 
 
 
