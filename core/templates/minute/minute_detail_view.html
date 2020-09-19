@@ -98,7 +98,11 @@
                     </table>
 
                 </div>
-                <button type="submit" name="profile" class="btn btn-success pull-right">Modifier le PV</button>
+                <a type="button"
+                   class="btn btn-warning btn-sm js-updates"
+                   href="{% url 'minute_update' minute.id %}" title="Modifier ce PV">
+                    <i class="fa fa-edit icon-large"></i>
+                </a>
                 <div class="clearfix"></div>
 
             </div>

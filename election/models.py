@@ -115,7 +115,7 @@ class Minute(models.Model):
     nbr_votes_cast = models.IntegerField(_('Suffrage valablement exprimé'), blank=True, null=False)
     image = models.FileField(_('Photo du PV'),
                              upload_to= get_pv_path,
-                             blank=False,
+                             blank=True,
                              null=False
                              )
     incident = models.BooleanField(default=False)
@@ -134,8 +134,8 @@ class Minute(models.Model):
 
 class MinuteDetails(models.Model):
     minute = models.ForeignKey(Minute, on_delete=models.CASCADE, null=False)
-    political_party = models.ForeignKey(PoliticalParty, on_delete=models.CASCADE, null=False)
-    nbr_votes_obtained = models.IntegerField(blank=False, null=False)
+    political_party = models.ForeignKey(PoliticalParty, on_delete=models.CASCADE, null=False, verbose_name=_('Parti'))
+    nbr_votes_obtained = models.IntegerField(blank=False, null=False,  verbose_name=_('Votes obtenues'))
 
     class Meta:
         db_table = "minute_details"

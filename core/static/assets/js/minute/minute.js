@@ -74,12 +74,6 @@ function showModal(event) {
     $('#imagepreview').attr('src', id);
     $('#imagemodal').modal('show');
 }
-/*
-    $('.formset_row-{{ formset.prefix }}').formset({
-        addText: 'Ajouter un parti',
-        deleteText: 'remove',
-        prefix: 'minute_details_set'
-    });*/
 
     $('.show').click( showModal);
     // Create election
@@ -96,6 +90,7 @@ function showModal(event) {
 
 });
 
-
-
-
+  jQuery(document).ready(function($){
+    $("#id_image").closest('div').parent().attr('class', 'form-control custom-file');
+    $("#id_file").closest('div').parent().attr('class', 'form-control custom-file');
+});

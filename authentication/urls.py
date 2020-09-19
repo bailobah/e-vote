@@ -45,7 +45,7 @@ urlpatterns = [
 
     path('minute/', views.minute_list, name='minute_list'),
     path('minute/create/', views.MinuteCreate.as_view(), name='minute_create'),
-    path('minute/update/<int:pk>/', views.minute_update, name='minute_update'),
+    path('minute/update/<int:pk>/', views.MinuteUpdate.as_view(), name='minute_update'),
     path('minute/delete/<int:pk>/', views.minute_delete, name='minute_delete'),
     path('minute_detail/<int:pk>/', views.minute_detail, name='minute_detail'),
     #url(r'^api/', include('rest_framework.urls', namespace='rest_framework')),

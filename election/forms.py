@@ -23,9 +23,10 @@ class MinuteUpdateForm(forms.ModelForm):
 
 
 class MinuteForm(forms.ModelForm):
-    # election = forms.IntegerField(required=False, widget=forms.widgets.HiddenInput())
-    # user = forms.IntegerField(required=False, widget=forms.widgets.HiddenInput())
-    image = forms.ImageField(widget=forms.FileInput)
+
+    image = forms.ImageField(widget=forms.FileInput(attrs={'type': 'file', 'class':'custom-file'}), label = "Joindre le PV",)
+    file = forms.ImageField(widget=forms.FileInput(attrs={'type': 'file', 'class':'custom-file'}), label = "Joindre la photo",)
+
     class Meta:
         model = Minute
         exclude = ['updated_at','created_at',]
@@ -33,24 +34,27 @@ class MinuteForm(forms.ModelForm):
     def __init__(self, user, *args, **kwargs):
 
         super(MinuteForm, self).__init__(*args, **kwargs)
-        self.user = user #kwargs.pop('user', None)
-
-        print(self.user)
+        self.user = user
         localitys = Allocation.objects.filter(user=self.user).values('locality_id')
-        self.fields['polling'].queryset = PollingStation.objects.filter(locality__in=localitys).filter(is_active=True)
+        self.fields['polling'].queryset = PollingStation.objects.filter(locality__in=localitys)#.filter(is_active=True)
         # self.fields['election'].queryset  = Election.objects.filter(pk=localitys)
         self.fields['election'].widget = forms.widgets.HiddenInput()
         self.fields['user'].widget = forms.widgets.HiddenInput()
         self.fields['nbr_votes_cast'].widget = forms.widgets.HiddenInput()
 
+class MinuteUpdateForm(forms.ModelForm):
 
+    image = forms.ImageField(widget=forms.FileInput(attrs={'type': 'file', 'class':'custom-file'}), label = "Joindre le PV", required=False)
+    file = forms.ImageField(widget=forms.FileInput(attrs={'type': 'file', 'class':'custom-file'}), label = "Joindre la photo",required=False)
 
+    class Meta:
+        model = Minute
+        exclude = ['updated_at','created_at',]
 
 class MinuteDetailForm(forms.ModelForm):
     class Meta:
         model = MinuteDetails
         exclude = ['description',]
-
 
 MinuteDetailsFormset = inlineformset_factory(
     Minute, MinuteDetails, form=MinuteDetailForm, extra=1, max_num=11,can_delete=True

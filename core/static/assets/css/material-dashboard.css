@@ -12,7 +12,27 @@
 =========================================================
 
  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.*/
- 
+
+.btn-file-upload{
+     width: 187px;
+     position:relative;
+ }
+
+.btn-file-upload:after{
+    content:  attr(value);
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 48%;
+    background: #795548;
+    color: white;
+    border-radius: 2px;
+    text-align: center;
+    font-size: 12px;
+    line-height: 2;
+ }
+
 
 /*     brand Colors              */
 .form-inline .form-group {

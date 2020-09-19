@@ -1,9 +1,10 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, UpdateView
 
 from election.forms import ElectionForm, MinuteForm, MinuteUpdateForm, MinuteDetailsFormset
 from election.models import Election, Minute, PollingStation, MinuteDetails
@@ -222,7 +223,7 @@ class MinuteCreate(CreateView):
             return self.form_invalid(form, minute_details)
 
     def form_valid(self, form, minute_details):
-
+        print("Valid")
         self.object = form.save(commit=False)
         self.object.nbr_votes_cast = self.object.nbr_voters - self.object.nbr_invalids_ballots
         self.object.save()
@@ -235,6 +236,73 @@ class MinuteCreate(CreateView):
         ps = PollingStation.objects.get(id=self.object.polling_id)
         ps.is_active = False
         ps.save()
+        return HttpResponseRedirect(self.get_success_url())
+
+    def form_invalid(self, form, minute_details):
+        print("invalid")
+        return self.render_to_response(
+            self.get_context_data(form=form,
+                                  minute_details=minute_details
+                                  )
+        )
+    def get_success_url(self):
+        return reverse_lazy('minute_detail', kwargs={'pk': self.object.pk})
+
+class MinuteUpdate(UpdateView):
+
+    model = Minute
+    template_name = 'minute/create.html'
+    #template_name = 'minute/minute_detail_edit.html'
+    form_class = MinuteUpdateForm
+    success_url = 'None'
+
+    # def get_form_kwargs(self):
+    #     kwargs = super(MinuteUpdate, self).get_form_kwargs()
+    #     kwargs.update({'user': self.request.user})
+    #     return kwargs
+
+
+    def get(self, request, *args, **kwargs):
+        """
+        Handles GET requests and instantiates blank version of the form
+        and its inline formsets.
+        """
+        self.object = self.get_object()
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+
+        # Get detail attention
+        minute_details = MinuteDetailsFormset(instance=self.object)
+
+        return self.render_to_response(
+            self.get_context_data(form=form,
+                                  minute_details=minute_details))
+
+    def post(self, request, *args, **kwargs):
+        """
+        Handles POST requests, instantiating a form instance and its inline
+        formsets with the passed POST variables and them checking them for
+        validity.
+        """
+        self.object = self.get_object()
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        minute_details = MinuteDetailsFormset(self.request.POST,instance=self.object)
+        if (form.is_valid() and minute_details.is_valid()):
+            return self.form_valid(form, minute_details)
+        else:
+            return self.form_invalid(form, minute_details)
+
+    def form_valid(self, form, minute_details):
+
+        self.object = form.save(commit=False)
+        self.object.save()
+
+        minute_details_table = minute_details.save(commit=False)
+        for td in minute_details_table:
+            td.minute = self.object
+            td.save()
+
         return HttpResponseRedirect(self.get_success_url())
 
     def form_invalid(self, form, minute_details):

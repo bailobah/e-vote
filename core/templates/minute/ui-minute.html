@@ -8,70 +8,69 @@
 {% endblock stylesheets %}
 
 {% block content %}
-<div class="container">
-    <p>
-        <a type="button" class="btn btn-outline-success js-create" href="{% url 'minute_create' %}">
-            <span class="glyphicon glyphicon-plus"></span>
-            Ajouter un PV
-        </a>
-    </p>
-    <table class="table-responsive{-sm|-md|-lg|-xl} table-dark table-striped" id="table">
-        <thead>
-        <tr class="bg-success">
-            <th>N° Bv</th>
-            <th>Centralisateur</th>
-            <th>Nbre d'inscrits</th>
-            <th>Nbre de votants</th>
-            <th>Bulletins nuls</th>
-            <th>Suffrage exprimé</th>
-            <th>Date</th>
-            <th>Action</th>
+<p>
+    <a type="button" class="btn btn-outline-success js-create" href="{% url 'minute_create' %}">
+        <span class="glyphicon glyphicon-plus"></span>
+        Ajouter un PV
+    </a>
+</p>
+<table class="table table-dark table-striped" id="table">
+    <thead>
+    <tr class="bg-success">
+        <th>N° Bv</th>
+        <th>Delegué</th>
+        <th>Inscrits</th>
+        <th>Votants</th>
+        <th>Bulletins nuls</th>
+        <th>Suffrage exprimé</th>
+        <th>Date</th>
+        <th>Action</th>
 
-        </tr>
-        </thead>
-        <tbody>
-        <body>
-        {% for field in data %}
-        <tr>
+    </tr>
+    </thead>
+    <tbody>
+    <body>
+    {% for field in data %}
+    <tr>
             <td><li><a href="{% url 'minute_detail' field.id %}">{{ field.polling.name }}</a></li></td>
-            <td>{{ field.user.first_name }} {{ field.user.last_name }}</td>
-            <td>{{ field.nbr_registrants }}</td>
-            <td>{{ field.nbr_voters}}</td>
-            <td>{{ field.nbr_invalids_ballots }}</td>
-            <td>{{ field.nbr_votes_cast }}</td>
-            <td>{{ field.created_at }}</td>
+        <td>{{ field.user.first_name }} {{ field.user.last_name }}</td>
+        <td>{{ field.nbr_registrants }}</td>
+        <td>{{ field.nbr_voters}}</td>
+        <td>{{ field.nbr_invalids_ballots }}</td>
+        <td>{{ field.nbr_votes_cast }}</td>
+        <td>{{ field.created_at }}</td>
 
-            <td>
-                <div class="btn-group" >
-                    <a data-id="{{ field.image.url }}" type="button"
-                       class="btn btn-info btn-sm show"
-                       title="Voir ce PV">
-                        <i  class="fa fa-eye icon-large"></i>
-                    </a>
-                    <a type="button"
-                       class="btn btn-warning btn-sm js-update"
-                       data-url="{% url 'minute_update' field.id %}" title="Modifier ce PV">
-                        <i class="fa fa-edit icon-large"></i>
-                    </a>
-                    <a type="button"
-                       class="btn btn-danger btn-sm js-delete"
-                       data-url="{% url 'minute_delete' field.id %}" title="Supprimer ce PV">
-                        <i class="fa fa-trash icon-large"></i>
-                    </a>
-                </div>
-            </td>
+        <td>
+            <div class="btn-group" >
+                <a data-id="{{ field.image.url }}" type="button"
+                   class="btn btn-info btn-sm show"
+                   title="Voir ce PV">
+                    <i  class="fa fa-eye icon-large"></i>
+                </a>
+                <a type="button"
+                   class="btn btn-warning btn-sm js-updates"
+                   href="{% url 'minute_update' field.id %}" title="Modifier ce PV">
+                    <i class="fa fa-edit icon-large"></i>
+                </a>
+                <a type="button"
+                   class="btn btn-danger btn-sm js-delete"
+                   data-url="{% url 'minute_delete' field.id %}" title="Supprimer ce PV">
+                    <i class="fa fa-trash icon-large"></i>
+                </a>
+            </div>
+        </td>
 
-        </tr>
-        {% empty %}
-        <tr>
-            <div class="text-center bg-warning btn-block">Zero PV enrégistré</div>
-        </tr>
-        {% endfor %}
-        </body>
-        </tbody>
-    </table>
+    </tr>
+    {% empty %}
+    <tr>
+        <div class="text-center bg-warning btn-block">Zero PV enrégistré</div>
+    </tr>
+    {% endfor %}
+    </body>
+    </tbody>
+</table>
 
-    <div class="pagination">
+<div class="pagination">
     <span class="step-links">
         {% if data.has_previous %}
             <a href="?page=1">&laquo; first</a>
@@ -87,29 +86,28 @@
             <a href="?page={{ data.paginator.num_pages }}"> &raquo;</a>
         {% endif %}
     </span>
-    </div>
-    <div class="modal fade" id="modal">
-        <div class="modal-dialog">
-            <div class="modal-content">
-            </div>
+</div>
+<div class="modal fade" id="modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
         </div>
     </div>
+</div>
 
 
-    <!-- Creates the bootstrap modal where the image will appear -->
-    <div class="modal fade" id="imagemodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Visialisation du PV</h4>
-                </div>
-                <div class="modal-body">
-                    <img src="" class="img-responsive" id="imagepreview" style="max_height:100%; width:100%;" >
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                </div>
+<!-- Creates the bootstrap modal where the image will appear -->
+<div class="modal fade" id="imagemodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">Visialisation du PV</h4>
+            </div>
+            <div class="modal-body">
+                <img src="" class="img-responsive" id="imagepreview" style="max_height:100%; width:100%;" >
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
@@ -122,3 +120,4 @@
 <script src="/static/assets/js/minute/minute.js"></script>
 
 {% endblock javascripts %}
+
