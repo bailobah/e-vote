@@ -36,7 +36,7 @@ class MinuteForm(forms.ModelForm):
         super(MinuteForm, self).__init__(*args, **kwargs)
         self.user = user
         localitys = Allocation.objects.filter(user=self.user).values('locality_id')
-        self.fields['polling'].queryset = PollingStation.objects.filter(locality__in=localitys)#.filter(is_active=True)
+        self.fields['polling'].queryset = PollingStation.objects.filter(locality__in=localitys).filter(is_active=True)
         # self.fields['election'].queryset  = Election.objects.filter(pk=localitys)
         self.fields['election'].widget = forms.widgets.HiddenInput()
         self.fields['user'].widget = forms.widgets.HiddenInput()

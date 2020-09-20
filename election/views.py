@@ -223,7 +223,7 @@ class MinuteCreate(CreateView):
             return self.form_invalid(form, minute_details)
 
     def form_valid(self, form, minute_details):
-        print("Valid")
+
         self.object = form.save(commit=False)
         self.object.nbr_votes_cast = self.object.nbr_voters - self.object.nbr_invalids_ballots
         self.object.save()
