@@ -15,11 +15,12 @@ class PoliticalParty(models.Model):
     class Meta:
         db_table = "political_party"
         ordering = ['name', ]
+
     def __str__(self):
         return self.name
 
 class PoliticalPartySerializer(serializers.ModelSerializer):
     class Meta:
         model = PoliticalParty
-        fields = '__all__'
+        fields = ['name', 'description', ]
 

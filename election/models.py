@@ -4,6 +4,7 @@ import uuid
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 from rest_framework.generics import get_object_or_404
 
 from locality.models import Locality, LocalitySerializer
@@ -145,20 +146,38 @@ class MinuteDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = MinuteDetails
         fields = ['political_party','nbr_votes_obtained']
+        #depth = 1
 
+class GetMinuteDetailsSerializer(serializers.ModelSerializer):
+    political_party = PoliticalPartySerializer()
+    class Meta:
+        model = MinuteDetails
+        fields = ['political_party','nbr_votes_obtained']
+        depth = 1
+class GetMinuteSerializer(serializers.ModelSerializer):
+    minute_details = GetMinuteDetailsSerializer(many=True, source='minutedetails_set')
+
+    class Meta:
+        model = Minute
+        fields = ['id','polling','user','nbr_registrants', 'nbr_votes_cast','nbr_voters', 'nbr_invalids_ballots','image','incident','comment','file','minute_details']
 
 class MinuteSerializer(serializers.ModelSerializer):
     minute_details = MinuteDetailsSerializer(many=True)
 
     class Meta:
         model = Minute
-        fields = ['polling','user','nbr_registrants', 'nbr_votes_cast','nbr_voters', 'nbr_invalids_ballots','image','incident','comment','file','minute_details']
-
+        fields = ['id','polling','user','nbr_registrants', 'nbr_votes_cast','nbr_voters', 'nbr_invalids_ballots','image','incident','comment','file','minute_details']
+        #depth = 2
     def create(self, validated_data):
 
         minute_details = validated_data.pop('minute_details')
+
+        nbr_votes_cast = int(validated_data['nbr_voters']) - int(validated_data['nbr_invalids_ballots'])
+        nbr_votes_obtaineds = list(map(lambda x: x['nbr_votes_obtained'], minute_details))
+        if(nbr_votes_cast != sum(nbr_votes_obtaineds)):
+            raise ValidationError({'nbr_votes_obtained': f'Total des votes obtenue ({sum(nbr_votes_obtaineds)}) doit etre egal au nombre de vote valide ({nbr_votes_cast})'})
         validated_data['election'] = get_object_or_404(Election, pk=1)
-        validated_data['nbr_votes_cast'] = int(validated_data['nbr_voters']) - int(validated_data['nbr_invalids_ballots'])
+        validated_data['nbr_votes_cast'] = nbr_votes_cast
         validated_data['nbr_registrants'] = 500
 
         minute = Minute.objects.create(**validated_data)
@@ -171,15 +190,15 @@ class MinuteSerializer(serializers.ModelSerializer):
         return minute
 
     def update(self, instance, validated_data):
-        albums_data = validated_data.pop('album_musician')
-        albums = (instance.album_musician).all()
-        albums = list(albums)
+        datail_data = validated_data.pop('minute_details')
+        details = (instance.minute_details).all()
+        albums = list(details)
         instance.first_name = validated_data.get('first_name', instance.first_name)
         instance.last_name = validated_data.get('last_name', instance.last_name)
         instance.instrument = validated_data.get('instrument', instance.instrument)
         instance.save()
 
-        for album_data in albums_data:
+        for album_data in datail_data:
             album = albums.pop(0)
             album.name = album_data.get('name', album.name)
             album.release_date = album_data.get('release_date', album.release_date)

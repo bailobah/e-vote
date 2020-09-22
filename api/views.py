@@ -10,7 +10,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.status import HTTP_400_BAD_REQUEST, HTTP_404_NOT_FOUND, HTTP_200_OK
 from rest_framework.views import APIView
 from django.contrib.auth import authenticate
-from election.models import PollingStation, PollingStationSerializer, MinuteSerializer
+from election.models import PollingStation, PollingStationSerializer, MinuteSerializer, Minute, GetMinuteSerializer
 from locality.models import Allocation
 from users.models import UserSerializer
 
@@ -38,6 +38,12 @@ class PollingDetails(APIView):
             serializer.save()
             return JsonResponse({'message':'ok'}, status=status.HTTP_201_CREATED)
         return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def get(self, request):
+        """List Transactions"""
+        minute = Minute.objects.all()
+        serializer = GetMinuteSerializer(instance=minute, many=True)
+        return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
 
 
 class Login(APIView):
