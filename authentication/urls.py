@@ -53,6 +53,7 @@ urlpatterns = [
    # path('api/v1/', include('rest_auth.urls')),
     path('api/v1/polling/', PollingList.as_view()),
     path('api/v1/polling_detail/', PollingDetails.as_view()),
+    path('api/v1/polling_detail/<int:pk>/', PollingDetails.as_view()),
     #path('api/v1/account/', include('allauth.urls')),
     path('api/v1/login/', Login.as_view(), name='api_token_auth'),
     #url(r'^rest-auth/registration/', include('rest_auth.registration.urls')),

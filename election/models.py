@@ -98,8 +98,6 @@ class PollingStationSerializer(serializers.ModelSerializer):
     class Meta:
         model = PollingStation
         fields = ['name','numero', 'locality']
-        #depth=2
-
 
 def get_pv_path(instance, filename):
     return os.path.join('pvs/{0}/{1}/{2}/{3}'.format(instance.user.id,instance.polling_id,uuid.uuid4(), filename))
@@ -146,7 +144,6 @@ class MinuteDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = MinuteDetails
         fields = ['political_party','nbr_votes_obtained']
-        #depth = 1
 
 class GetMinuteDetailsSerializer(serializers.ModelSerializer):
     political_party = PoliticalPartySerializer()
@@ -160,14 +157,14 @@ class GetMinuteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Minute
         fields = ['id','polling','user','nbr_registrants', 'nbr_votes_cast','nbr_voters', 'nbr_invalids_ballots','image','incident','comment','file','minute_details']
-
+        depth = 1
 class MinuteSerializer(serializers.ModelSerializer):
     minute_details = MinuteDetailsSerializer(many=True)
 
     class Meta:
         model = Minute
         fields = ['id','polling','user','nbr_registrants', 'nbr_votes_cast','nbr_voters', 'nbr_invalids_ballots','image','incident','comment','file','minute_details']
-        #depth = 2
+
     def create(self, validated_data):
 
         minute_details = validated_data.pop('minute_details')
@@ -190,21 +187,41 @@ class MinuteSerializer(serializers.ModelSerializer):
         return minute
 
     def update(self, instance, validated_data):
-        datail_data = validated_data.pop('minute_details')
-        details = (instance.minute_details).all()
-        albums = list(details)
-        instance.first_name = validated_data.get('first_name', instance.first_name)
-        instance.last_name = validated_data.get('last_name', instance.last_name)
-        instance.instrument = validated_data.get('instrument', instance.instrument)
-        instance.save()
+        print(instance)
 
-        for album_data in datail_data:
-            album = albums.pop(0)
-            album.name = album_data.get('name', album.name)
-            album.release_date = album_data.get('release_date', album.release_date)
-            album.num_stars = album_data.get('num_stars', album.num_stars)
-            album.save()
+        # datail_data = validated_data.pop('minute_details')
+        # print(datail_data)
+        # print(datail_data)
+        # details = (instance.minute_details).all()
+        # print(details)
+        # albums = list(details)
+        # instance.first_name = validated_data.get('first_name', instance.first_name)
+        # instance.last_name = validated_data.get('last_name', instance.last_name)
+        # instance.instrument = validated_data.get('instrument', instance.instrument)
+        # instance.save()
+        #
+        # for album_data in datail_data:
+        #     album = albums.pop(0)
+        #     album.name = album_data.get('name', album.name)
+        #     album.release_date = album_data.get('release_date', album.release_date)
+        #     album.num_stars = album_data.get('num_stars', album.num_stars)
+        #     album.save()
         return instance
+
+    # def update(self, instance, validated_data):
+    #     instance.name = validated_data.get('name', instance.name)
+    #
+    #     quiz_data = validated_data.get('quiz')
+    #     if quiz_data:
+    #         instance.quiz_set.clear()
+    #         Quiz.objects.bulk_create(
+    #             [
+    #                 Quiz(module_referred=instance, **quiz)
+    #                 for quiz in quiz_data
+    #             ],
+    #         )
+    #     instance.save()
+    #     return instance
 
 
 

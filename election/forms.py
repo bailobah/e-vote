@@ -1,12 +1,10 @@
 from django import forms
-from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Field, Fieldset, Div, HTML, ButtonHolder, Submit
-from django.forms import TextInput, inlineformset_factory
-from django.utils.translation import gettext_lazy as _
+from django.forms import inlineformset_factory
+
 from election.models import Election, Minute, PollingStation, MinuteDetails
 from locality.models import Allocation
 
-from .custom_layout_object import *
+
 class ElectionForm(forms.ModelForm):
 
     class Meta:
@@ -57,6 +55,6 @@ class MinuteDetailForm(forms.ModelForm):
         exclude = ['description',]
 
 MinuteDetailsFormset = inlineformset_factory(
-    Minute, MinuteDetails, form=MinuteDetailForm, extra=1, max_num=11,can_delete=True
+    Minute, MinuteDetails, form = MinuteDetailForm, extra=1, max_num=11,can_delete=True
 )
 
