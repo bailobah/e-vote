@@ -14,7 +14,7 @@ class PoliticalParty(models.Model):
 
     class Meta:
         db_table = "political_party"
-        ordering = ['name', ]
+        #ordering = ['name', ]
 
     def __str__(self):
         return self.name

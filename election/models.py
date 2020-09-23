@@ -157,7 +157,7 @@ class GetMinuteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Minute
         fields = ['id','polling','user','nbr_registrants', 'nbr_votes_cast','nbr_voters', 'nbr_invalids_ballots','image','incident','comment','file','minute_details']
-        depth = 1
+        #depth = 1
 class MinuteSerializer(serializers.ModelSerializer):
     minute_details = MinuteDetailsSerializer(many=True)
 

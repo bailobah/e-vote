@@ -8,6 +8,7 @@ from django.views.generic.edit import CreateView, UpdateView
 
 from election.forms import ElectionForm, MinuteForm, MinuteUpdateForm, MinuteDetailsFormset
 from election.models import Election, Minute, PollingStation, MinuteDetails
+from locality.models import Allocation
 from political_party.models import PoliticalParty
 
 
@@ -90,7 +91,12 @@ def election_update(request, pk):
 
 def minute_list(request):
 
-    data_list = Minute.objects.all()
+    if request.user.is_superuser == True :
+        data_list = Minute.objects.all()
+    else:
+        localitys = Allocation.objects.filter(user=request.user).values('locality_id')
+        pollings = PollingStation.objects.filter(locality__in=localitys)
+        data_list = Minute.objects.filter(polling__in=pollings)
     page = request.GET.get('page', 1)
     paginator = Paginator(data_list, 20)
     try:

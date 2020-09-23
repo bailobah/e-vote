@@ -11,6 +11,7 @@ from rest_framework.views import APIView
 
 from election.models import PollingStation, PollingStationSerializer, MinuteSerializer, Minute, GetMinuteSerializer
 from locality.models import Allocation
+from political_party.models import PoliticalPartySerializer, PoliticalParty
 from users.models import UserSerializer
 
 
@@ -21,9 +22,9 @@ class PollingList(APIView):
     def get(self, request):
 
         localitys = Allocation.objects.filter(user=request.user).values('locality_id')
-        polling = PollingStation.objects.filter(locality__in=localitys)#.filter(is_active=True)
+        polling = PollingStation.objects.filter(locality__in=localitys).filter(is_active=True)
         serializer = PollingStationSerializer(polling, many=True)
-        return JsonResponse({'data': serializer.data, 'user': UserSerializer(request.user).data}, safe=False, status=status.HTTP_200_OK)
+        return JsonResponse({'data': serializer.data, 'user': UserSerializer(request.user).data, 'political_party':PoliticalPartySerializer(PoliticalParty.objects.filter(is_active=True), many=True).data}, safe=False, status=status.HTTP_200_OK)
 
 class PollingDetails(APIView):
 
@@ -50,10 +51,10 @@ class PollingDetails(APIView):
     def put(self, request, pk, format=None):
 
         minute = get_object_or_404(Minute, pk=pk )
-        serializer = MinuteSerializer(instance=minute, data=request.data, many=True, partial = True)
-        #print(serializer)
+        serializer = MinuteSerializer(instance=minute, data=request.data,many=True)
+        print(serializer)
         if serializer.is_valid(raise_exception=True):
-            validated_data = dict(list(serializer.validated_data.items()))
+            #validated_data = dict(list(serializer.validated_data.items()))
             serializer.save()
             JsonResponse({'message':'ok'}, safe=False, status=status.HTTP_200_OK)
         return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
