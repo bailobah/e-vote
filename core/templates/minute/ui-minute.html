@@ -42,13 +42,14 @@
 
         <td>
             <div class="btn-group" >
-                {% if field.image %}
+                {% if field.image == True %}
                 <a data-id="{{ field.image.url }}" type="button"
                    class="btn btn-info btn-sm show"
                    title="Voir ce PV">
                     <i  class="fa fa-eye icon-large"></i>
                 </a>
                 {% endif %}
+
                 {% if request.user.is_superuser == True %}
                 <a type="button"
                    class="btn btn-warning btn-sm js-updates"

@@ -110,9 +110,11 @@
     </div>
     <div class="col-md-4">
         <div class="card card-profile">
+            {% if field.image == True %}
             <a href="#pv">
                 <img src="{{ minute.image.url }}" style="max_height:100%; width:100%;">
             </a>
+            {% endif %}
             <div class="card-body">
                 <label class="bmd-label-floating">Information du centralisateur :</label>
                 <h4 class="card-category text-gray">
