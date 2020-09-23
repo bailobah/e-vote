@@ -33,7 +33,8 @@ class PollingDetails(APIView):
     model = Minute
 
     def post(self, request):
-
+        self.request.POST._mutable = True
+        self.request.data['user'] = self.request.user.id
         serializer = MinuteSerializer(data=request.data, context={"request": request})
 
         if serializer.is_valid(raise_exception=True):
