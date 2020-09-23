@@ -1,197 +1,117 @@
 {% extends "layouts/base.html" %}
 
-{% block title %} Dashboard {% endblock %} 
+{% block title %} Dashboard {% endblock %}
 
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}{% endblock stylesheets %}
 
 {% block content %}
 
-    <div class="row">
-        <div class="col-lg-3 col-md-6 col-sm-6">
-        <div class="card card-stats">
-          <div class="card-header card-header-info card-header-icon">
-            <div class="card-icon">
-              <i class="material-icons">people</i>
-            </div>
-            <p class="card-category">Nombre total d'electeur</p>
-            <h3 class="card-title">8 000 000</h3>
-          </div>
-          <div class="card-footer">
-            <div class="stats">
-              <i class="material-icons">date_range</i> Last 24 Hours
-            </div>
-          </div>
+<div class="row">
+  <div class="col-lg-4 col-md-6 col-sm-6">
+    <div class="card card-stats">
+      <div class="card-header card-header-info card-header-icon">
+        <div class="card-icon">
+          <i class="material-icons">people</i>
         </div>
-      </div>
-       <div class="col-lg-3 col-md-6 col-sm-6">
-        <div class="card card-stats">
-          <div class="card-header card-header-primary card-header-icon">
-            <div class="card-icon">
-              <i class="material-icons">how_to_vote</i>
-            </div>
-            <p class="card-category">Nombre de votant</p>
-            <h3 class="card-title">{{ nbr_registrants.nbr_registrants__sum }}</h3>
-          </div>
-          <div class="card-footer">
-            <div class="stats">
-              <i class="material-icons">date_range</i> Last 24 Hours
-            </div>
-          </div>
-        </div>
-      </div>
-       <div class="col-lg-3 col-md-6 col-sm-6">
-        <div class="card card-stats">
-          <div class="card-header card-header-success card-header-icon">
-            <div class="card-icon">
-              <i class="material-icons">how_to_vote</i>
-            </div>
-            <p class="card-category">Suffrage exprimé</p>
-            <h3 class="card-title">{{ nbr_voters.nbr_voters__sum }}</h3>
-          </div>
-          <div class="card-footer">
-            <div class="stats">
-              <i class="material-icons">date_range</i> Last 24 Hours
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-3 col-md-6 col-sm-6">
-        <div class="card card-stats">
-          <div class="card-header card-header-danger card-header-icon">
-            <div class="card-icon">
-              <i class="material-icons">how_to_vote</i>
-            </div>
-            <p class="card-category">Bulletins nulls</p>
-            <h3 class="card-title">{{ nbr_invalids_ballots.nbr_invalids_ballots__sum }}</h3>
-          </div>
-          <div class="card-footer">
-            <div class="stats">
-              <i class="material-icons text-danger">warning</i>
-              <a href="#pablo">Get More Space...</a>
-            </div>
-          </div>
-        </div>
+        <p class="card-category">Nombre d'electeurs</p>
+        <h3 class="card-title">5 410 089</h3>
       </div>
 
     </div>
-
-    <div class="row">
-        <div class="col-lg-3 col-md-6 col-sm-6">
-        <div class="card card-stats">
-          <div class="card-header card-header-info card-header-icon">
-            <div class="card-icon">
-              <i class="material-icons">store</i>
-            </div>
-            <p class="card-category">Total de bureau de vote</p>
-            <h3 class="card-title">{{ nbr_votes_cast.nbr_votes_cast__sum }}</h3>
-          </div>
-          <div class="card-footer">
-            <div class="stats">
-              <i class="material-icons">date_range</i> Last 24 Hours
-            </div>
-          </div>
+  </div>
+  <div class="col-lg-4 col-md-6 col-sm-6">
+    <div class="card card-stats">
+      <div class="card-header card-header-primary card-header-icon">
+        <div class="card-icon">
+          <i class="material-icons">how_to_vote</i>
         </div>
-      </div>
-       <div class="col-lg-3 col-md-6 col-sm-6">
-        <div class="card card-stats">
-          <div class="card-header card-header-danger card-header-icon">
-            <div class="card-icon">
-              <i class="material-icons">store</i>
-            </div>
-            <p class="card-category">Bureau de vote annulé</p>
-            <h3 class="card-title">2 100</h3>
-          </div>
-          <div class="card-footer">
-            <div class="stats">
-              <i class="material-icons text-danger">warning</i>
-              <a href="#pablo">Get More Space...</a>
-            </div>
-          </div>
-        </div>
-      </div>
-       <div class="col-lg-3 col-md-6 col-sm-6">
-        <div class="card card-stats">
-          <div class="card-header card-header-success card-header-icon">
-            <div class="card-icon">
-              <i class="material-icons">how_to_vote</i>
-            </div>
-            <p class="card-category">Votants UFDG</p>
-            <h3 class="card-title">4 000 000</h3>
-          </div>
-          <div class="card-footer">
-            <div class="stats">
-              <i class="material-icons">date_range</i> Last 24 Hours
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-3 col-md-6 col-sm-6">
-        <div class="card card-stats">
-          <div class="card-header card-header-rose card-header-icon">
-            <div class="card-icon">
-              <i class="material-icons">how_to_vote</i>
-            </div>
-            <p class="card-category">PPTR</p>
-            <h3 class="card-title">2 000 000 </h3>
-          </div>
-          <div class="card-footer">
-            <div class="stats">
-              <i class="material-icons text-danger">warning</i>
-            </div>
-          </div>
-        </div>
+        <p class="card-category">Nombre de votants</p>
+        <h3 class="card-title">{{ nbr_registrants.nbr_registrants__sum }}</h3>
       </div>
 
     </div>
-    <div class="row">
-      <div class="col">
-        <div class="card card-chart">
-          <div class="card-header card-header-success">
-            <div class="ct-chart" id="dailySalesChart"></div>
-          </div>
-          <div class="card-body">
-            <h4 class="card-title">Score UFDG</h4>
-            <p class="card-category">
-              <span class="text-success"><i class="fa fa-long-arrow-up"></i> 55% </span> des votants.</p>
-          </div>
-          <div class="card-footer">
-            <div class="stats">
-              <i class="material-icons">access_time</i> updated 4 minutes ago
-            </div>
-          </div>
+  </div>
+  <div class="col-lg-4 col-md-6 col-sm-6">
+    <div class="card card-stats">
+      <div class="card-header card-header-success card-header-icon">
+        <div class="card-icon">
+          <i class="material-icons">how_to_vote</i>
         </div>
-      </div>
-    </div>
-
-    <div class="row">
-       <div class="col">
-        <div class="card card-chart">
-          <div class="card-header card-header-danger">
-            <div class="ct-chart" id="completedTasksChart"></div>
-          </div>
-          <div class="card-body">
-            <h4 class="card-title">PPTR</h4>
-            <p class="card-category"> <span class="text-success"><i class="fa fa-long-arrow-up"></i> 36% </span> des votants.</p>
-</p>
-          </div>
-          <div class="card-footer">
-            <div class="stats">
-              <i class="material-icons">access_time</i> campaign sent 2 days ago
-            </div>
-          </div>
-        </div>
-      </div>
+        <p class="card-category">Suffrage exprimé</p>
+        <h3 class="card-title">{{ nbr_voters.nbr_voters__sum }}</h3>
       </div>
 
     </div>
+  </div>
+
+
+</div>
+
+<div class="row">
+  <div class="col-lg-4 col-md-6 col-sm-6">
+    <div class="card card-stats">
+      <div class="card-header card-header-danger card-header-icon">
+        <div class="card-icon">
+          <i class="material-icons">how_to_vote</i>
+        </div>
+        <p class="card-category">Bulletins nulls</p>
+        <h3 class="card-title">{{ nbr_invalids_ballots.nbr_invalids_ballots__sum }}</h3>
+      </div>
+
+    </div>
+  </div>
+  <div class="col-lg-4 col-md-6 col-sm-6">
+    <div class="card card-stats">
+      <div class="card-header card-header-info card-header-icon">
+        <div class="card-icon">
+          <i class="material-icons">store</i>
+        </div>
+        <p class="card-category">Total de bureau de vote</p>
+        <h3 class="card-title">{{ nbr_votes_cast.nbr_votes_cast__sum }}</h3>
+      </div>
+
+    </div>
+  </div>
+
+
+
+
+</div>
+
+<div class="row">
+  <table class="table table-dark table-striped" id="table">
+    <thead>
+    <tr  class="bg-success">
+      <th>Parti </th>
+      <th>Votes obtenues</th>
+
+    </tr>
+    </thead>
+    <tbody>
+    <body>
+    {% for field in votes_by_party %}
+    <tr>
+      <td><li>{{ field.name }}</li></td>
+      <td>{{ field.nbr_votes_obtained }} </td>
+    </tr>
+
+    {% empty %}
+    <tr>
+      <div class="text-center bg-warning btn-block">Zero parti enregistré</div>
+    </tr>
+    {% endfor %}
+    </body>
+    </tbody>
+  </table>
+</div>
 
 {% endblock content %}
 
 <!-- Specific Page JS goes HERE  -->
 {% block javascripts %}
 
-  <script>
+<script>
     $(document).ready(function() {
       // Javascript method's body can be found in assets/js/demos.js
       md.initDashboardPageCharts();

@@ -32,7 +32,7 @@
     <body>
     {% for field in data %}
     <tr>
-            <td><li><a href="{% url 'minute_detail' field.id %}">{{ field.polling.name }}</a></li></td>
+        <td><li><a href="{% url 'minute_detail' field.id %}">{{ field.polling.name }}</a></li></td>
         <td>{{ field.user.first_name }} {{ field.user.last_name }}</td>
         <td>{{ field.nbr_registrants }}</td>
         <td>{{ field.nbr_voters}}</td>
@@ -49,6 +49,7 @@
                     <i  class="fa fa-eye icon-large"></i>
                 </a>
                 {% endif %}
+                {% if request.user.is_superuser == True %}
                 <a type="button"
                    class="btn btn-warning btn-sm js-updates"
                    href="{% url 'minute_update' field.id %}" title="Modifier ce PV">
@@ -59,6 +60,7 @@
                    data-url="{% url 'minute_delete' field.id %}" title="Supprimer ce PV">
                     <i class="fa fa-trash icon-large"></i>
                 </a>
+                {% endif %}
             </div>
         </td>
 

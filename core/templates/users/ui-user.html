@@ -1,0 +1,93 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Liste des localités {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+<p>
+    <a type="button" class="btn btn-outline-success js-create" data-url="{% url 'locality_type_create' %}">
+        <span class="glyphicon glyphicon-plus"></span>
+        Ajouter un Type de localité
+    </a>
+</p>
+<table class="table table-dark table-striped" id="table">
+    <thead>
+    <tr class="bg-success">
+        <th>Box</th>
+        <th>ID</th>
+        <th>Nom</th>
+        <th>Actif</th>
+        <th>Description</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <body>
+    {% for f in locality_types %}
+    <tr>
+        <td>
+        <span class="custom-checkbox">
+            <input type="checkbox" id="checkbox1" name="options[]" value="{{ f.id }}">
+            <label for="checkbox1"></label>
+        </span>
+        </td>
+        <td>{{ f.id }}</td>
+        <td>{{ f.name }}</td>
+        <td>{{ f.is_active }}</td>
+        <td>{{ f.description }}</td>
+        <td>
+            <a type="button"
+               class="btn btn-warning btn-sm js-update"
+               data-url="{% url 'locality_type_update' f.id %}" title="Modifier">
+                <i class="fa fa-edit icon-large"></i>
+            </a>
+            <a type="button"
+               class="btn btn-danger btn-sm js-delete"
+               data-url="{% url 'locality_type_delete' f.id %}" title="Supprimer">
+                <i class="fa fa-trash icon-large"></i>
+            </a>
+        </td>
+
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="7" class="text-center bg-warning">Zero localité enrégistré</td>
+    </tr>
+    {% endfor %}
+    </body>
+    </tbody>
+</table>
+
+<div class="pagination">
+    <span class="step-links">
+        {% if locality_types.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ locality_types.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ locality_types.number }} of {{ locality_types.paginator.num_pages }}.
+        </span>
+
+        {% if data.has_next %}
+            <a href="?page={{ locality_types.next_page_number }}">next</a>
+            <a href="?page={{ locality_types.paginator.num_pages }}"> &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+
+<div class="modal fade" id="modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+<script src="/static/assets/js/locality_type/locality_type.js"></script>
+{% endblock javascripts %}
