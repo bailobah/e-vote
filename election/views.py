@@ -45,7 +45,7 @@ def election_list(request):
 def election_delete(request, pk):
     election = get_object_or_404(Election, pk=pk)
     data = dict()
-    if request.method == 'POST':
+    if request.method == 'POST' and request.user.is_superuser == True :
         election.delete()
         data['form_is_valid'] = True
         elections = Election.objects.all()
