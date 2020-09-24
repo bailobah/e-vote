@@ -175,7 +175,7 @@ class MinuteSerializer(serializers.ModelSerializer):
             raise ValidationError({'nbr_votes_obtained': f'Total des votes obtenue ({sum(nbr_votes_obtaineds)}) doit etre egal au nombre de vote valide ({nbr_votes_cast})'})
         validated_data['election'] = get_object_or_404(Election, pk=1)
         validated_data['nbr_votes_cast'] = nbr_votes_cast
-        validated_data['nbr_registrants'] = 500
+        #validated_data['nbr_registrants'] = 500
 
         minute = Minute.objects.create(**validated_data)
         for minute_detail in minute_details:
