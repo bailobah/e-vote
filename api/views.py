@@ -1,3 +1,4 @@
+import requests
 from django.contrib.auth import authenticate
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
@@ -7,6 +8,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.status import HTTP_400_BAD_REQUEST, HTTP_404_NOT_FOUND, HTTP_200_OK
+from rest_framework.utils import json
 from rest_framework.views import APIView
 
 from election.models import PollingStation, PollingStationSerializer, MinuteSerializer, Minute, GetMinuteSerializer
@@ -82,12 +84,11 @@ class Login(APIView):
 
 def inbound_sms(request):
     log.debug('==========================')
-    if request.is_json:
+    print(request.GET.get('emetteur'))
+    log.error(request.GET.get('emetteur'))
+    log.error(request.GET.get('message'))
+    print(request.GET.get('date_reception'))
+    log.error(request.GET.get('date_reception'))
+    log.debug(request.GET.get('date_reception'))
 
-        log.error(request.get_json())
-        print(request.get_json())
-    else:
-        data = dict(request.form) or dict(request.args)
-        log.error(data)
-
-    #return ('', 204)
+    return JsonResponse({'':''},status=HTTP_200_OK)
