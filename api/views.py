@@ -13,7 +13,8 @@ from election.models import PollingStation, PollingStationSerializer, MinuteSeri
 from locality.models import Allocation
 from political_party.models import PoliticalPartySerializer, PoliticalParty
 from users.models import UserSerializer
-
+import logging
+log = logging.getLogger(__name__)
 
 class PollingList(APIView):
     parser_classes = [MultiPartParser, FormParser]
@@ -80,10 +81,13 @@ class Login(APIView):
 
 
 def inbound_sms(request):
+    log.debug('==========================')
     if request.is_json:
+
+        log.error(request.get_json())
         print(request.get_json())
     else:
         data = dict(request.form) or dict(request.args)
-        print(data)
+        log.error(data)
 
     #return ('', 204)
