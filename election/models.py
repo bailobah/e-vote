@@ -82,7 +82,9 @@ class PollingStation(models.Model):
     numero = models.IntegerField()
     locality = models.ForeignKey(Locality, on_delete=models.CASCADE, null=False)
     is_active = models.BooleanField(default=True)
-    adress = models.CharField(max_length=100)
+    adress = models.CharField(max_length=100, default="")
+    nbr_registrants = models.IntegerField(blank=True)
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -112,6 +114,8 @@ class Minute(models.Model):
     nbr_voters = models.IntegerField(_('Nombre de votants'),blank=False, null=False)
     nbr_invalids_ballots = models.IntegerField(_('Bulletins nuls'),blank=False, null=False)
     nbr_votes_cast = models.IntegerField(_('Suffrage valablement exprimé'), blank=True, null=False)
+    nbr_votes_pro = models.IntegerField(_('Nombre de vote par procuration'), default=0)
+
     image = models.FileField(_('Photo du PV'),
                              upload_to= get_pv_path,
                              blank=True,

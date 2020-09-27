@@ -22,8 +22,8 @@ class MinuteUpdateForm(forms.ModelForm):
 
 class MinuteForm(forms.ModelForm):
 
-    image = forms.ImageField(widget=forms.FileInput(attrs={'type': 'file', 'class':'custom-file'}), label = "Joindre le PV",)
-    file = forms.ImageField(widget=forms.FileInput(attrs={'type': 'file', 'class':'custom-file'}), label = "Joindre la photo",)
+    image = forms.ImageField(widget=forms.FileInput(attrs={'type': 'file', 'class':'custom-file'}), label = "Joindre le PV",required=False,)
+    file = forms.ImageField(widget=forms.FileInput(attrs={'type': 'file', 'class':'custom-file'}), label = "Joindre la photo",required=False,)
 
     class Meta:
         model = Minute
@@ -55,6 +55,6 @@ class MinuteDetailForm(forms.ModelForm):
         exclude = ['description',]
 
 MinuteDetailsFormset = inlineformset_factory(
-    Minute, MinuteDetails, form = MinuteDetailForm, extra=1, max_num=11,can_delete=True
+    Minute, MinuteDetails, form = MinuteDetailForm, extra=1, max_num=12,can_delete=True
 )
 

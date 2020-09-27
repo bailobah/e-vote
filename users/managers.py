@@ -3,7 +3,7 @@ from django.utils.translation import gettext_lazy as _
 
 class UserManager(BaseUserManager):
     def create_user(
-            self, first_name, last_name, phone_number,is_staff, active, created_at,updated_at, password=None,
+            self, first_name, last_name, phone_number,is_staff, is_superviser,active, created_at,updated_at, password=None,
         commit=True):
         """
         Creates and saves a User with the given email, first name, last name
@@ -21,6 +21,7 @@ class UserManager(BaseUserManager):
             last_name=last_name,
             phone_number=phone_number,
             is_staff=is_staff,
+            is_superviser=is_superviser,
             active=active,
             created_at=created_at,
             updated_at=updated_at,

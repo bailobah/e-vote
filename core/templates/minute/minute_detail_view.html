@@ -98,11 +98,13 @@
                     </table>
 
                 </div>
+                {% if request.user.is_superuser == True or request.user.is_staff == True %}
                 <a type="button"
                    class="btn btn-warning btn-sm js-updates"
                    href="{% url 'minute_update' minute.id %}" title="Modifier ce PV">
                     <i class="fa fa-edit icon-large"></i>
                 </a>
+                {% endif %}
                 <div class="clearfix"></div>
 
             </div>

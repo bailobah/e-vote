@@ -77,3 +77,13 @@ class Login(APIView):
         token, _ = Token.objects.get_or_create(user=user)
         return JsonResponse({'token': token.key},
                             status=HTTP_200_OK)
+
+
+def inbound_sms(request):
+    if request.is_json:
+        print(request.get_json())
+    else:
+        data = dict(request.form) or dict(request.args)
+        print(data)
+
+    #return ('', 204)
