@@ -84,7 +84,9 @@ class Login(APIView):
 
 def inbound_sms(request):
     log.debug('==========================')
-    data = json.loads(request.body)
-    print(data['emetteur'])
+    log.debug(request)
+    log.error(request)
+    #data = json.loads(request.body)
+    print(request)
 
     return JsonResponse({'':''},status=HTTP_200_OK)
