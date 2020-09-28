@@ -85,6 +85,7 @@ class Login(APIView):
 def inbound_sms(request):
     log.debug('==========================')
     log.debug(request)
+    log.debug(request.GET.get("numero"))
     log.error(request.GET.get("numero"))
     log.error(request.GET.get("message"))
     #data = json.loads(request.body)
