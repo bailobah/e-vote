@@ -97,22 +97,22 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ['first_name','last_name','phone_number']
 
-class Profile(models.Model):
-
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    birth_date = models.DateField(null=True, blank=True)
-    image = models.ImageField(upload_to='images/')
-    about = models.TextField(default='', blank=True)
-    city = models.CharField(max_length=100, default='', blank=True)
-    country = models.CharField(max_length=100, default='', blank=True)
-    code_postal = models.CharField(max_length=100, default='', blank=True)
-
-    @receiver(post_save, sender=User)
-    def create_user_profile(sender, instance, created, **kwargs):
-        if created:
-            Profile.objects.create(user=instance)
-        instance.profile.save()
-    @receiver(post_save, sender=User)
-    def save_user_profile(sender, instance, **kwargs):
-        instance.profile.save()
+# class Profile(models.Model):
+#
+#     user = models.OneToOneField(User, on_delete=models.CASCADE)
+#     birth_date = models.DateField(null=True, blank=True)
+#     image = models.ImageField(upload_to='images/')
+#     about = models.TextField(default='', blank=True)
+#     city = models.CharField(max_length=100, default='', blank=True)
+#     country = models.CharField(max_length=100, default='', blank=True)
+#     code_postal = models.CharField(max_length=100, default='', blank=True)
+#
+#     @receiver(post_save, sender=User)
+#     def create_user_profile(sender, instance, created, **kwargs):
+#         if created:
+#             Profile.objects.create(user=instance)
+#         instance.profile.save()
+#     @receiver(post_save, sender=User)
+#     def save_user_profile(sender, instance, **kwargs):
+#         instance.profile.save()
 
