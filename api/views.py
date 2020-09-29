@@ -48,14 +48,14 @@ class PollingDetails(APIView):
     def get(self, request):
 
         """List Transactions"""
-        minute = Minute.objects.all()
+        minute = Minute.objects.filter(user=request.user)
         serializer = GetMinuteSerializer(instance=minute, many=True)
-        return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
+        return JsonResponse({'data': serializer.data, 'user': UserSerializer(request.user).data}, safe=False, status=status.HTTP_200_OK)
 
     def put(self, request, pk, format=None):
 
-        minute = get_object_or_404(Minute, pk=pk )
-        serializer = MinuteSerializer(instance=minute, data=request.data,many=True)
+        minute = Minute.objects.get(pk=pk )
+        serializer = GetMinuteSerializer(instance=minute, data=request.data,many=True)
         print(serializer)
         if serializer.is_valid(raise_exception=True):
             #validated_data = dict(list(serializer.validated_data.items()))
@@ -84,7 +84,11 @@ class Login(APIView):
 
 def inbound_sms(request):
     log.debug('==========================')
+    log.error('==========================')
+    log.info('==========================')
     log.debug(request)
+    log.error(request)
+    log.info(request)
     log.debug(request.GET.get("numero"))
     log.error(request.GET.get("numero"))
     log.info(request.GET.get("message"))

@@ -112,7 +112,7 @@ def minute_delete(request, pk):
     minute = get_object_or_404(Minute, pk=pk)
     data = dict()
     if request.method == 'POST':
-        minute.delete()
+        #minute.delete()
         data['form_is_valid'] = True
 
         data['html_list'] = render_to_string('minute/list.html', {

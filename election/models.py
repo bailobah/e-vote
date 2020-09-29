@@ -151,11 +151,15 @@ class MinuteDetailsSerializer(serializers.ModelSerializer):
 
 class GetMinuteDetailsSerializer(serializers.ModelSerializer):
     political_party = PoliticalPartySerializer()
+
     class Meta:
         model = MinuteDetails
         fields = ['political_party','nbr_votes_obtained']
         depth = 1
+
 class GetMinuteSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
+    polling=PollingStationSerializer()
     minute_details = GetMinuteDetailsSerializer(many=True, source='minutedetails_set')
 
     class Meta:
@@ -174,7 +178,10 @@ class MinuteSerializer(serializers.ModelSerializer):
         minute_details = validated_data.pop('minute_details')
 
         nbr_votes_cast = int(validated_data['nbr_voters']) - int(validated_data['nbr_invalids_ballots'])
+        political_partys = list(map(lambda x: x['political_party'], minute_details))
         nbr_votes_obtaineds = list(map(lambda x: x['nbr_votes_obtained'], minute_details))
+        if(len(set(political_partys)) != len(political_partys)):
+            raise ValidationError({'political_partys': 'Duplication des partis'})
         if(nbr_votes_cast != sum(nbr_votes_obtaineds)):
             raise ValidationError({'nbr_votes_obtained': f'Total des votes obtenue ({sum(nbr_votes_obtaineds)}) doit etre egal au nombre de vote valide ({nbr_votes_cast})'})
         validated_data['election'] = get_object_or_404(Election, pk=1)
