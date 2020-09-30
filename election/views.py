@@ -91,7 +91,7 @@ def election_update(request, pk):
 
 def minute_list(request):
 
-    if request.user.is_superuser == True :
+    if request.user.is_superuser:
         data_list = Minute.objects.all()
     else:
         localitys = Allocation.objects.filter(user=request.user).values('locality_id')
@@ -223,7 +223,7 @@ class MinuteCreate(CreateView):
 
         minute_details = MinuteDetailsFormset(self.request.POST, self.request.FILES)
 
-        if (form.is_valid() and minute_details.is_valid()):
+        if form.is_valid() and minute_details.is_valid():
             return self.form_valid(form, minute_details)
         else:
             return self.form_invalid(form, minute_details)
@@ -245,7 +245,7 @@ class MinuteCreate(CreateView):
         return HttpResponseRedirect(self.get_success_url())
 
     def form_invalid(self, form, minute_details):
-        print("invalid")
+
         return self.render_to_response(
             self.get_context_data(form=form,
                                   minute_details=minute_details
@@ -258,15 +258,8 @@ class MinuteUpdate(UpdateView):
 
     model = Minute
     template_name = 'minute/create.html'
-    #template_name = 'minute/minute_detail_edit.html'
     form_class = MinuteUpdateForm
     success_url = 'None'
-
-    # def get_form_kwargs(self):
-    #     kwargs = super(MinuteUpdate, self).get_form_kwargs()
-    #     kwargs.update({'user': self.request.user})
-    #     return kwargs
-
 
     def get(self, request, *args, **kwargs):
         """
@@ -285,11 +278,7 @@ class MinuteUpdate(UpdateView):
                                   minute_details=minute_details))
 
     def post(self, request, *args, **kwargs):
-        """
-        Handles POST requests, instantiating a form instance and its inline
-        formsets with the passed POST variables and them checking them for
-        validity.
-        """
+
         self.object = self.get_object()
         form_class = self.get_form_class()
         form = self.get_form(form_class)
@@ -317,5 +306,6 @@ class MinuteUpdate(UpdateView):
                                   minute_details=minute_details
                                   )
         )
+
     def get_success_url(self):
         return reverse_lazy('minute_detail', kwargs={'pk': self.object.pk})

@@ -16,7 +16,7 @@ from locality.models import Allocation
 from political_party.models import PoliticalPartySerializer, PoliticalParty
 from users.models import UserSerializer
 import logging
-log = logging.getLogger(__name__)
+log = logging.getLogger('django')
 
 class PollingList(APIView):
     parser_classes = [MultiPartParser, FormParser]
