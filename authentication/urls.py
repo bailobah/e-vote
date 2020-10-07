@@ -8,7 +8,7 @@ from django.urls import path, include
 from  django.conf.urls.static import static
 from rest_framework.authtoken.views import obtain_auth_token
 
-from api.views import PollingList, PollingDetails, Login, inbound_sms
+from api.views import PollingList, PollingDetails, Login, inbound_sms, PollingDetail
 from .views import login_view, register_user
 from django.contrib.auth.views import LogoutView
 
@@ -50,6 +50,8 @@ urlpatterns = [
     path('minute_detail/<int:pk>/', views.minute_detail, name='minute_detail'),
     path('api/v1/polling/', PollingList.as_view()),
     path('api/v1/polling_detail/', PollingDetails.as_view()),
+    path('api/v1/find_minute/', PollingDetail.as_view()),
+
     path('api/v1/polling_detail/<int:pk>/', PollingDetails.as_view()),
     path('api/v1/evote-sms/', inbound_sms, name='inbound_sms'),
     #path('api/v1/account/', include('allauth.urls')),

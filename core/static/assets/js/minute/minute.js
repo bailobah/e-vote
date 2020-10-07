@@ -94,3 +94,4 @@ function showModal(event) {
     $("#id_image").closest('div').parent().attr('class', 'form-control custom-file');
     $("#id_file").closest('div').parent().attr('class', 'form-control custom-file');
 });
+

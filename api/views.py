@@ -1,20 +1,22 @@
-import requests
+
 from django.contrib.auth import authenticate
 from django.http import JsonResponse
-from django.shortcuts import get_object_or_404
 # Create your views here.
+from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.status import HTTP_400_BAD_REQUEST, HTTP_404_NOT_FOUND, HTTP_200_OK
-from rest_framework.utils import json
 from rest_framework.views import APIView
 
-from election.models import PollingStation, PollingStationSerializer, MinuteSerializer, Minute, GetMinuteSerializer
+from api.models import GetMinuteSmsSerializer, MinuteSms, MinuteDetailsSms
+from election.models import PollingStation, PollingStationSerializer, MinuteSerializer, Minute, GetMinuteSerializer, \
+    Election
 from locality.models import Allocation
 from political_party.models import PoliticalPartySerializer, PoliticalParty
-from users.models import UserSerializer
+from users.models import UserSerializer, User
+import phonenumbers
 import logging
 log = logging.getLogger('django')
 
@@ -25,9 +27,23 @@ class PollingList(APIView):
     def get(self, request):
 
         localitys = Allocation.objects.filter(user=request.user).values('locality_id')
-        polling = PollingStation.objects.filter(locality__in=localitys).filter(is_active=True)
+        polling = PollingStation.objects.filter(locality__in=localitys)#.filter(is_active=True)
         serializer = PollingStationSerializer(polling, many=True)
         return JsonResponse({'data': serializer.data, 'user': UserSerializer(request.user).data, 'political_party':PoliticalPartySerializer(PoliticalParty.objects.filter(is_active=True), many=True).data}, safe=False, status=status.HTTP_200_OK)
+
+class PollingDetail(APIView):
+
+    parser_classes = [MultiPartParser, FormParser]
+    permission_classes = [IsAuthenticated]
+    model = Minute
+
+    def get(self, request):
+
+        minute = MinuteSms.objects.filter(polling=self.request.data['polling'])
+
+        serializer = GetMinuteSmsSerializer(instance=minute, many=True)
+        return JsonResponse({'data': serializer.data, 'user': UserSerializer(request.user).data}, safe=False, status=status.HTTP_200_OK)
+
 
 class PollingDetails(APIView):
 
@@ -81,20 +97,47 @@ class Login(APIView):
         return JsonResponse({'token': token.key},
                             status=HTTP_200_OK)
 
-
 def inbound_sms(request):
-    log.debug('==========================')
-    log.error('==========================')
-    log.info('==========================')
-    log.debug(request)
-    log.error(request)
-    log.info(request)
-    log.debug(request.GET.get("numero"))
-    log.error(request.GET.get("numero"))
-    log.info(request.GET.get("message"))
-    #data = json.loads(request.body)
-    print(request)
-    print(request.GET.get("numero"))
-    print(request.GET.get("message"))
 
-    return JsonResponse({'':''},status=HTTP_200_OK)
+    phone_number = phonenumbers.parse(request.GET.get("emetteur"), "FR")
+
+    try:
+        user = User.objects.get(phone_number = phonenumbers.format_number(phone_number, phonenumbers.PhoneNumberFormat.NATIONAL).replace(" ", ""))
+    except User.DoesNotExist:
+        return None
+
+    sms = {k.lower(): v for k, v in (x.split(':') for x in request.GET.get("message").split(",")) }
+    numero_polling = sms.pop("bv", None)
+    nbr_voters = sms.pop("votant", None)
+    nbr_invalids_ballots = sms.pop("bn", None)
+    election = get_object_or_404(Election, pk=1)
+
+    if numero_polling != None :
+        try:
+            polling = PollingStation.objects.filter(numero=numero_polling).first()
+
+            minute = MinuteSms.objects.create(election=election,
+                                          polling=polling,
+                                          user=user,
+                                          nbr_registrants=polling.nbr_registrants,
+                                          nbr_voters= nbr_voters,
+                                          nbr_invalids_ballots=nbr_invalids_ballots,
+                                          nbr_votes_cast= int(nbr_voters) - int(nbr_invalids_ballots),
+                                          )
+
+            for party, votes_obtained in sms.items():
+                print(party)
+                print(votes_obtained)
+                try:
+                    political_party = PoliticalParty.objects.filter(name=party).first()
+                    if political_party != None :
+                        print(political_party.id)
+                        minute_detail =MinuteDetailsSms.objects.create(minute=minute,
+                                                                       political_party=political_party,
+                                                                       nbr_votes_obtained=votes_obtained)
+                except PoliticalParty.DoesNotExist :
+                    None
+        except PollingStation.DoesNotExist:
+            None
+
+    return JsonResponse({'':''}, status=HTTP_200_OK)

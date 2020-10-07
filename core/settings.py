@@ -18,7 +18,7 @@ SECRET_KEY = config('SECRET_KEY', default='S#perS3crEt_1122')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False #config('DEBUG', default=False)
-#DEBUG = True
+
 # load production server from .env
 
 def ip_addresses():
@@ -30,7 +30,7 @@ def ip_addresses():
                 ip_list.append(addrs[x][0]['addr'])
     return ip_list
 
-ALLOWED_HOSTS = ['evote.sabinnov.com','127.0.0.1']
+ALLOWED_HOSTS = ['evote.sabinnov.com','guinee-evote.sabinnov.com','127.0.0.1']
 
 INSTALLED_APPS = [
     'django.contrib.admin',

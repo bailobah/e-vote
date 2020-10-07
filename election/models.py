@@ -114,7 +114,8 @@ class Minute(models.Model):
     nbr_voters = models.IntegerField(_('Nombre de votants'),blank=False, null=False)
     nbr_invalids_ballots = models.IntegerField(_('Bulletins nuls'),blank=False, null=False)
     nbr_votes_cast = models.IntegerField(_('Suffrage valablement exprimé'), blank=True, null=False)
-    nbr_votes_pro = models.IntegerField(_('Nombre de vote par procuration'), default=0)
+    nbr_votes_procuration = models.IntegerField(_('Nombre de vote par procuration'), default=0)
+    nbr_votes_derogation = models.IntegerField(_('Nombre de vote par derogation'), default=0)
 
     image = models.FileField(_('Photo du PV'),
                              upload_to= get_pv_path,
@@ -164,14 +165,14 @@ class GetMinuteSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Minute
-        fields = ['id','polling','user','nbr_registrants', 'nbr_votes_cast','nbr_voters', 'nbr_invalids_ballots','image','incident','comment','file','minute_details']
+        fields = ['id','polling','user','nbr_registrants', 'nbr_votes_cast','nbr_voters', 'nbr_invalids_ballots','image','incident','comment','file','nbr_votes_procuration','nbr_votes_derogation','minute_details']
         #depth = 1
 class MinuteSerializer(serializers.ModelSerializer):
     minute_details = MinuteDetailsSerializer(many=True)
 
     class Meta:
         model = Minute
-        fields = ['id','polling','user','nbr_registrants', 'nbr_votes_cast','nbr_voters', 'nbr_invalids_ballots','image','incident','comment','file','minute_details']
+        fields = ['id','polling','user','nbr_registrants', 'nbr_votes_cast','nbr_voters', 'nbr_invalids_ballots','image','incident','comment','file','nbr_votes_procuration','nbr_votes_derogation','minute_details']
 
     def create(self, validated_data):
 
