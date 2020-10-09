@@ -113,6 +113,8 @@ def inbound_sms(request):
     #except User.DoesNotExist:
      #   None
 
+    log.info(request)
+
     sms = {k.lower(): v for k, v in (x.split(':') for x in request.GET.get("message").split(",")) }
     numero_polling = sms.pop("bv", None)
     nbr_voters = sms.pop("votant", None)
@@ -122,8 +124,12 @@ def inbound_sms(request):
     if numero_polling != None :
         try:
             polling = PollingStation.objects.filter(numero=numero_polling,is_active=True).first()
+            log.info("entry and locality existing")
+            log.info("The value of polling is %s", polling)
             if not MinuteSms.objects.filter(polling=polling).exists() and Allocation.objects.filter(locality_id=polling.locality_id).exists():
+                log.info("entry and locality existing")
                 user_id = Allocation.objects.filter(locality_id=polling.locality_id).values('user_id').first()
+                log.info("The value of user is %s", polling)
                 minute = MinuteSms.objects.create(election=election,
                                               polling=polling,
                                               user_id=user_id,
