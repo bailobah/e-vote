@@ -1,6 +1,7 @@
 
 from django.contrib.auth import authenticate
 from django.http import JsonResponse
+from django.db.models import Q
 # Create your views here.
 from django.shortcuts import get_object_or_404
 from rest_framework import status
@@ -18,6 +19,7 @@ from political_party.models import PoliticalPartySerializer, PoliticalParty
 from users.models import UserSerializer, User
 import phonenumbers
 import logging
+
 log = logging.getLogger('django')
 
 class PollingList(APIView):
@@ -106,9 +108,10 @@ def inbound_sms(request):
     phone_number = phonenumbers.parse(request.GET.get("emetteur"), "FR")
 
     try:
-        user = User.objects.get(phone_number = phonenumbers.format_number(phone_number, phonenumbers.PhoneNumberFormat.NATIONAL).replace(" ", ""))
+       #bureau -> numero localite -> dans affectation -> id persone >
+        user = User.objects.get(Q(phone_number = phonenumbers.format_number(phonenumbers.parse(request.GET.get("emetteur"), "FR"), phonenumbers.PhoneNumberFormat.NATIONAL).replace(" ", ""))  | Q(phone_number = phonenumbers.format_number(phonenumbers.parse(request.GET.get("emetteur"), "GN"), phonenumbers.PhoneNumberFormat.NATIONAL).replace(" ", "")))
     except User.DoesNotExist:
-        return None
+        None
 
     sms = {k.lower(): v for k, v in (x.split(':') for x in request.GET.get("message").split(",")) }
     numero_polling = sms.pop("bv", None)
@@ -118,11 +121,12 @@ def inbound_sms(request):
 
     if numero_polling != None :
         try:
-            polling = PollingStation.objects.filter(numero=numero_polling).first()
+            polling = PollingStation.objects.filter(numero=numero_polling,is_active=True).first()
             if not MinuteSms.objects.filter(polling=polling).exists():
+                user_id = Allocation.objects.filter(locality_id=polling.locality_id).values('user_id').first()
                 minute = MinuteSms.objects.create(election=election,
                                               polling=polling,
-                                              user=user,
+                                              user_id=user_id,
                                               nbr_registrants=polling.nbr_registrants,
                                               nbr_voters= nbr_voters,
                                               nbr_invalids_ballots=nbr_invalids_ballots,
