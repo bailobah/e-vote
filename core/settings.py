@@ -107,13 +107,7 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'OPTIONS': {
-            'read_default_file': '/etc/mysql/evote.cnf',
-        },
-    },
-    'cloud': {
-        'ENGINE': 'django.db.backends.mysql',
+         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'evote',
         'USER': 'evote',
         'PASSWORD': 'uxpzecag2snvcglq',
@@ -124,8 +118,8 @@ DATABASES = {
                 'ssl_disabled': True
             }
         },
+    },
 
-    }
 }
 
 # Password validation
