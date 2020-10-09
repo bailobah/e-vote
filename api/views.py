@@ -27,7 +27,7 @@ class PollingList(APIView):
     def get(self, request):
 
         localitys = Allocation.objects.filter(user=request.user).values('locality_id')
-        polling = PollingStation.objects.filter(locality__in=localitys)#.filter(is_active=True)
+        polling = PollingStation.objects.filter(locality__in=localitys).filter(is_active=True)
         serializer = PollingStationSerializer(polling, many=True)
         return JsonResponse({'data': serializer.data, 'user': UserSerializer(request.user).data, 'political_party':PoliticalPartySerializer(PoliticalParty.objects.filter(is_active=True), many=True).data}, safe=False, status=status.HTTP_200_OK)
 
@@ -37,7 +37,7 @@ class PollingDetail(APIView):
     permission_classes = [IsAuthenticated]
     model = Minute
 
-    def get(self, request):
+    def post(self, request):
 
         minute = MinuteSms.objects.filter(polling=self.request.data['polling'])
 
@@ -54,6 +54,10 @@ class PollingDetails(APIView):
     def post(self, request):
         self.request.POST._mutable = True
         self.request.data['user'] = self.request.user.id
+        polling = self.request.data['polling']
+        if Minute.objects.filter(polling=polling).exists():
+            return JsonResponse({'message':f'Le pv correspondant au bureau N° ({polling}) a déja été crée'}, status=status.HTTP_205_RESET_CONTENT)
+
         serializer = MinuteSerializer(data=request.data, context={"request": request})
 
         if serializer.is_valid(raise_exception=True):
@@ -115,28 +119,26 @@ def inbound_sms(request):
     if numero_polling != None :
         try:
             polling = PollingStation.objects.filter(numero=numero_polling).first()
+            if not MinuteSms.objects.filter(polling=polling).exists():
+                minute = MinuteSms.objects.create(election=election,
+                                              polling=polling,
+                                              user=user,
+                                              nbr_registrants=polling.nbr_registrants,
+                                              nbr_voters= nbr_voters,
+                                              nbr_invalids_ballots=nbr_invalids_ballots,
+                                              nbr_votes_cast= int(nbr_voters) - int(nbr_invalids_ballots),
+                                              )
 
-            minute = MinuteSms.objects.create(election=election,
-                                          polling=polling,
-                                          user=user,
-                                          nbr_registrants=polling.nbr_registrants,
-                                          nbr_voters= nbr_voters,
-                                          nbr_invalids_ballots=nbr_invalids_ballots,
-                                          nbr_votes_cast= int(nbr_voters) - int(nbr_invalids_ballots),
-                                          )
+                for party, votes_obtained in sms.items():
 
-            for party, votes_obtained in sms.items():
-                print(party)
-                print(votes_obtained)
-                try:
-                    political_party = PoliticalParty.objects.filter(name=party).first()
-                    if political_party != None :
-                        print(political_party.id)
-                        minute_detail =MinuteDetailsSms.objects.create(minute=minute,
-                                                                       political_party=political_party,
-                                                                       nbr_votes_obtained=votes_obtained)
-                except PoliticalParty.DoesNotExist :
-                    None
+                    try:
+                        political_party = PoliticalParty.objects.filter(name=party).first()
+                        if political_party != None :
+                            MinuteDetailsSms.objects.create(minute=minute,
+                                                                           political_party=political_party,
+                                                                           nbr_votes_obtained=votes_obtained)
+                    except PoliticalParty.DoesNotExist :
+                        None
         except PollingStation.DoesNotExist:
             None
 

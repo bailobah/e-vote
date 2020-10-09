@@ -30,7 +30,7 @@ def ip_addresses():
                 ip_list.append(addrs[x][0]['addr'])
     return ip_list
 
-ALLOWED_HOSTS = ['evote.sabinnov.com','guinee-evote.sabinnov.com','127.0.0.1']
+ALLOWED_HOSTS = ['cloud.digitalocean.com','evote.sabinnov.com','guinee-evote.sabinnov.com','127.0.0.1']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -104,8 +104,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'core.wsgi.application'
 
-# Database
-# https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 DATABASES = {
     'default': {
@@ -113,6 +111,20 @@ DATABASES = {
         'OPTIONS': {
             'read_default_file': '/etc/mysql/evote.cnf',
         },
+    },
+    'cloud': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'evote',
+        'USER': 'evote',
+        'PASSWORD': 'uxpzecag2snvcglq',
+        'HOST' : 'db-mysql-nyc1-99275-do-user-7998149-0.b.db.ondigitalocean.com',
+        'PORT' : '25060',
+        'OPTIONS':{
+            'ssl' : {
+                'ssl_disabled': True
+            }
+        },
+
     }
 }
 
