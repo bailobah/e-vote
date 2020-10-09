@@ -107,11 +107,11 @@ def inbound_sms(request):
 
     phone_number = phonenumbers.parse(request.GET.get("emetteur"), "FR")
 
-    try:
+    #try:
        #bureau -> numero localite -> dans affectation -> id persone >
-        user = User.objects.get(Q(phone_number = phonenumbers.format_number(phonenumbers.parse(request.GET.get("emetteur"), "FR"), phonenumbers.PhoneNumberFormat.NATIONAL).replace(" ", ""))  | Q(phone_number = phonenumbers.format_number(phonenumbers.parse(request.GET.get("emetteur"), "GN"), phonenumbers.PhoneNumberFormat.NATIONAL).replace(" ", "")))
-    except User.DoesNotExist:
-        None
+        #user = User.objects.get(Q(phone_number = phonenumbers.format_number(phonenumbers.parse(request.GET.get("emetteur"), "FR"), phonenumbers.PhoneNumberFormat.NATIONAL).replace(" ", ""))  | Q(phone_number = phonenumbers.format_number(phonenumbers.parse(request.GET.get("emetteur"), "GN"), phonenumbers.PhoneNumberFormat.NATIONAL).replace(" ", "")))
+    #except User.DoesNotExist:
+     #   None
 
     sms = {k.lower(): v for k, v in (x.split(':') for x in request.GET.get("message").split(",")) }
     numero_polling = sms.pop("bv", None)
@@ -122,7 +122,7 @@ def inbound_sms(request):
     if numero_polling != None :
         try:
             polling = PollingStation.objects.filter(numero=numero_polling,is_active=True).first()
-            if not MinuteSms.objects.filter(polling=polling).exists():
+            if not MinuteSms.objects.filter(polling=polling).exists() and Allocation.objects.filter(locality_id=polling.locality_id).exists():
                 user_id = Allocation.objects.filter(locality_id=polling.locality_id).values('user_id').first()
                 minute = MinuteSms.objects.create(election=election,
                                               polling=polling,
