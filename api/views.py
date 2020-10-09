@@ -135,11 +135,11 @@ def inbound_sms(request):
                                               polling=polling,
                                               user=User.objects.get(pk=user_id),
                                               nbr_registrants=polling.nbr_registrants,
-                                              nbr_voters= nbr_voters,
-                                              nbr_invalids_ballots=nbr_invalids_ballots,
+                                              nbr_voters= int(nbr_voters),
+                                              nbr_invalids_ballots=int(nbr_invalids_ballots),
                                               nbr_votes_cast= int(nbr_voters) - int(nbr_invalids_ballots),
                                               )
-
+                log.info("The value of minute is %s", minute)
                 for party, votes_obtained in sms.items():
 
                     try:
