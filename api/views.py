@@ -130,10 +130,10 @@ def inbound_sms(request):
                 log.info("entry and locality existing")
                 user_id = Allocation.objects.filter(locality_id=polling.locality_id).values('user_id').first()
                 log.info("The value of user is %s", user_id)
-
+                user = User.objects.get(pk=user_id)
                 minute = MinuteSms.objects.create(election=election,
                                               polling=polling,
-                                              user=User.objects.get(pk=user_id),
+                                              user=user,
                                               nbr_registrants=polling.nbr_registrants,
                                               nbr_voters= int(nbr_voters),
                                               nbr_invalids_ballots=int(nbr_invalids_ballots),
