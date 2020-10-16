@@ -2,6 +2,8 @@
 from django.contrib.auth import authenticate
 from django.http import JsonResponse
 from django.db.models import Q
+import re
+
 # Create your views here.
 from django.shortcuts import get_object_or_404
 from rest_framework import status
@@ -105,7 +107,7 @@ class Login(APIView):
 
 def inbound_sms(request):
 
-    phone_number = phonenumbers.parse(request.GET.get("emetteur"), "FR")
+    phone_number = phonenumbers.parse(request.GET.get("emetteur"), "GN")
 
     #try:
        #bureau -> numero localite -> dans affectation -> id persone >
@@ -115,12 +117,21 @@ def inbound_sms(request):
 
     log.info(request)
 
-    sms = {k.lower(): v for k, v in (x.split(':') for x in request.GET.get("message").split(",")) }
-    numero_polling = sms.pop("bv", None)
-    nbr_voters = sms.pop("votant", None)
-    nbr_invalids_ballots = sms.pop("bn", None)
-    election = get_object_or_404(Election, pk=1)
+#    sms = {k.lower(): v for k, v in (x.split(':') for x in request.GET.get("message").split(",")) }
+    grammar = r"(?P<key>[A-Za-z]*).(?P<value>[0-9]+)"
+    sms = { k: v for k, v in re.findall(grammar, request.GET.get("message").lower().replace('x', '')) }
 
+    message = ''
+    try :
+        numero_polling = sms.pop("bv", None)
+        nbr_voters = sms.pop("votant")
+        nbr_invalids_ballots = sms.pop("bn")
+    except KeyError:
+        #Todo write in new table for bad format
+        message += 'bv ou votant ou bn sont abscent dans le message envoyé'
+
+    election = get_object_or_404(Election, pk=1)
+   #Todo  -> x to replace, check double, error
     if numero_polling != None :
         try:
             polling = PollingStation.objects.filter(numero=numero_polling,is_active=True).first()
@@ -133,6 +144,7 @@ def inbound_sms(request):
 
                 user = User.objects.filter(pk=allocation.user.id).first()
                 log.info("The value of user is %s", user)
+                #Todo check data
                 minute = MinuteSms.objects.create(election=election,
                                               polling=polling,
                                               user=user,
@@ -154,5 +166,9 @@ def inbound_sms(request):
                         None
         except PollingStation.DoesNotExist:
             None
+    else :
+        #Todo write in new table for bad format
+        None
+
 
     return JsonResponse({'':''}, status=HTTP_200_OK)

@@ -70,3 +70,5 @@ systemctl daemon-reload
 sudo systemctl restart gunicorn
 
 sudo nano /etc/nginx/sites-available/default
+
+
