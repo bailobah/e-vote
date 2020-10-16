@@ -138,7 +138,7 @@ def inbound_sms(request):
             polling = PollingStation.objects.filter(numero=numero_polling,is_active=True).first()
             log.info("entry and locality existing")
             log.info("The value of polling is %s", polling)
-            if not MinuteSms.objects.filter(polling=polling).exists() and Allocation.objects.filter(locality_id=polling.locality_id).exists():
+            if not MinuteSms.objects.filter(polling=polling).exists() and polling != None and Allocation.objects.filter(locality_id=polling.locality_id).exists():
                 log.info("entry and locality existing")
                 log.info("The value of locality_id is %s",  polling.locality_id)
                 allocation = Allocation.objects.filter(locality_id=polling.locality_id).first()
