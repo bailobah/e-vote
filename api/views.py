@@ -173,11 +173,24 @@ def inbound_sms(request):
                                                                                nbr_votes_obtained=votes_obtained)
                             else :
                                 message += f'| Le parti ({party.upper()}) est inconnu'
+                                rej = RejetedSms.objects.create(sms=request.GET.get("message"),
+                                                                sender_phone=sender_phone, created_at=auto_now_add,
+                                                                errorMessage=message, delegate_phone=user.phone_number)
+                                log.info("The value of rej is %s", rej)
 
                         except PoliticalParty.DoesNotExist :
                             message += f'| Le parti ({party.upper()}) est inconnu'
+                            rej = RejetedSms.objects.create(sms=request.GET.get("message"), sender_phone=sender_phone,
+                                                            created_at=auto_now_add, errorMessage=message,
+                                                            delegate_phone=user.phone_number)
+                            log.info("The value of rej is %s", rej)
                 else :
-                    RejetedSms.objects.create(sms=request.GET.get("message"),sender_phone=sender_phone,created_at=auto_now_add,errorMessage=message,delegate_phone = user.phone_number)
+                    rej = RejetedSms.objects.create(sms=request.GET.get("message"),sender_phone=sender_phone,created_at=auto_now_add,errorMessage=message,delegate_phone = user.phone_number)
+                    log.info("The value of rej is %s", rej)
+            else :
+                message += f'Le bureau de vote ({numero_polling}) a déjà été traité'
+                RejetedSms.objects.create(sms=request.GET.get("message"), sender_phone=sender_phone,
+                                          created_at=auto_now_add, errorMessage=message, delegate_phone=user.phone_number)
         except PollingStation.DoesNotExist:
             message  += f'Le bureau de vote ({numero_polling}) fourni est innexistant'
             RejetedSms.objects.create(sms=request.GET.get("message"), sender_phone=sender_phone,
@@ -185,8 +198,10 @@ def inbound_sms(request):
 
     else :
         message += f'Le bureau de vote ({numero_polling}) fourni est innexistant'
-        RejetedSms.objects.create(sms=request.GET.get("message"), sender_phone=sender_phone,
-                                  created_at=auto_now_add, errorMessage=message, delegate_phone=user.phone_number)
+        rej = RejetedSms.objects.create(sms=request.GET.get("message"),
+                                        sender_phone=sender_phone,
+                                        created_at=auto_now_add, errorMessage=message, delegate_phone=user.phone_number)
+        log.info("The value of rej is %s", rej)
 
 
     return JsonResponse({'':''}, status=HTTP_200_OK)
