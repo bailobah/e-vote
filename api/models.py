@@ -52,7 +52,7 @@ class GetMinuteSmsSerializer(serializers.ModelSerializer):
         model = MinuteSms
         fields = ['id', 'polling', 'user', 'nbr_registrants', 'nbr_votes_cast', 'nbr_voters','nbr_invalids_ballots','minute_details']
 
-class RejetedSms(models.Model):
+class RejectedSms(models.Model):
     sms =  models.CharField(max_length=1000, default="")
     sender_phone = models.CharField(max_length=100, default="")
     created_at = models.DateTimeField(auto_now_add=True)
