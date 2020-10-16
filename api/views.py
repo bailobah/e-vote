@@ -120,6 +120,7 @@ def inbound_sms(request):
 #    sms = {k.lower(): v for k, v in (x.split(':') for x in request.GET.get("message").split(",")) }
     grammar = r"(?P<key>[A-Za-z]*).(?P<value>[0-9]+)"
     sms = { k: v for k, v in re.findall(grammar, request.GET.get("message").lower().replace('x', '')) }
+    log.info("The value of sms is %s",sms)
 
     message = ''
     try :
