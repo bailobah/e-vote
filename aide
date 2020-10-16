@@ -3,7 +3,7 @@ find . -path "*/migrations/*.py" -not -name "__init__.py" -delete
 pip install --upgrade --force-reinstall Django==2.2.10
 python manage.py migrate --run-syncdb
 #sudo lsof -t -i tcp:8000 | xargs kill -9
-# python manage.py runserver 0.0.0.0:8080
+# python3 manage.py runserver 0.0.0.0:8080
 #http://192.168.1.31:8080/login/?next=/
 #http://85.170.200.186:8080/
 iSPKcu5byzZ2zhK
