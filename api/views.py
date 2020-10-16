@@ -116,7 +116,7 @@ def inbound_sms(request):
      #   None
 
     log.info(request)
-    sender_phone = phonenumbers.format_number(phonenumbers.parse(request.GET.get("emetteur"), "GN"))
+    sender_phone = phonenumbers.format_number(phone_number, phonenumbers.PhoneNumberFormat.NATIONAL).replace(" ", "")
 #    sms = {k.lower(): v for k, v in (x.split(':') for x in request.GET.get("message").split(",")) }
     grammar = r"(?P<key>[A-Za-z]*).(?P<value>[0-9]+)"
     sms = { k: int(v) for k, v in re.findall(grammar, request.GET.get("message").lower().replace('x', '')) }
