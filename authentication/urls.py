@@ -14,6 +14,7 @@ from django.contrib.auth.views import LogoutView
 
 from django.conf import settings
 from election import views
+from sms import views as s_views
 from political_party import views as views_party
 from locality_type import views as l_views
 from api import views as api_views
@@ -38,10 +39,13 @@ urlpatterns = [
     path('political_party/update/<int:pk>/', views_party.political_party_update, name='political_party_update'),
     path('political_party/delete/<int:pk>/', views_party.political_party_delete, name='political_party_delete'),
 
+    path('sms/', s_views.sms_list, name=f'sms_list'),
+
     path('locality_type/', l_views.locality_type_list, name=f'{l_name}_list'),
     path('locality_type/create/', l_views.locality_type_create, name=f'{l_name}_create'),
     path('locality_type/update/<int:pk>/', l_views.locality_type_update, name=f'{l_name}_update'),
     path('locality_type/delete/<int:pk>/', l_views.locality_type_delete, name=f'{l_name}_delete'),
+
 
     path('minute/', views.minute_list, name='minute_list'),
     path('minute/create/', views.MinuteCreate.as_view(), name='minute_create'),
