@@ -28,7 +28,7 @@ def save_sms_form(request, form, template_name):
 
 def sms_list(request):
 
-    sms = RejectedSms.objects.all()
+    sms = RejectedSms.objects.all().order_by('-id')
 
     page = request.GET.get('page', 1)
     paginator = Paginator(sms, 20)
