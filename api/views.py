@@ -135,7 +135,7 @@ def inbound_sms(request):
 
 
         if nbr_voters !=  sum(sms.values()) :
-            message += '| La somme des voies des partis est different du nombre de votants'
+            message += ' La somme des voies des partis est different du nombre de votants'
         if len(sms) != PoliticalParty.objects.filter(is_active=True).count() :
             message += f'| Le nombre de partis fourni ({len(sms)}) est différent ({PoliticalParty.objects.filter(is_active=True).count()})'
 

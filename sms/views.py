@@ -13,7 +13,7 @@ def save_sms_form(request, form, template_name):
         if form.is_valid():
             form.save()
             data['form_is_valid'] = True
-            sms = PoliticalParty.objects.all()
+            sms = PoliticalParty.objects.all().order_by('-id')
             data['html_sms_list'] = render_to_string('sms/list.html', {
                 'sms': sms
             })
@@ -27,6 +27,16 @@ def save_sms_form(request, form, template_name):
 def sms_list(request):
 
     sms = RejectedSms.objects.all()
+
+    page = request.GET.get('page', 1)
+    paginator = Paginator(sms, 20)
+    try:
+        sms = paginator.page(page)
+    except PageNotAnInteger:
+        sms = paginator.page(1)
+    except EmptyPage:
+        sms = paginator.page(paginator.num_pages)
+
     return render(request, 'sms/ui-sms.html', {'sms': sms})
 
 def sms_delete(request, pk):
@@ -35,7 +45,7 @@ def sms_delete(request, pk):
     if request.method == 'POST':
         sms.delete()
         data['form_is_valid'] = True
-        sms = RejectedSms.objects.all()
+        sms = RejectedSms.objects.all().order_by('-id')
         data['html_sms_list'] = render_to_string('sms/list.html', {
             'sms': sms
         })
