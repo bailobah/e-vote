@@ -1,13 +1,8 @@
 
 {% for s in sms %}
 <tr>
-    <td>
-        <span class="custom-checkbox">
-            <input type="checkbox" id="checkbox1" name="options[]" value="{{ f.id }}">
-            <label for="checkbox1"></label>
-        </span>
-    </td>
-    <td>{{ s.id }}</td>
+
+
     <td>{{ s.sms }}</td>
     <td>{{ s.sender_phone }}</td>
     <td>{{ s.created_at }}</td>
