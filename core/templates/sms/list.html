@@ -4,12 +4,11 @@
 
 
     <td>{{ s.id }}</td>
-    <td>{{ s.sms }}</td>
+    <td><div style="overflow:auto; width:100px">{{ s.sms }}</div></td>
     <td>{{ s.sender_phone }}</td>
     <td>{{ s.created_at }}</td>
     <td>{{ s.errorMessage }}</td>
     <td>{{ s.delegate_phone }}</td>
-
 
 </tr>
 {% empty %}
