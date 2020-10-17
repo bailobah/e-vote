@@ -115,6 +115,7 @@ def inbound_sms(request):
         sender_phone = phonenumbers.format_number(phone_number, phonenumbers.PhoneNumberFormat.NATIONAL).replace(" ", "")
         delegate_phone = ''
 
+        grammar = r"(?P<key>[A-Za-z]*).*(?P<value>[0-9]+)"
         sms = { k: int(v) for k, v in re.findall(grammar, request.GET.get("message").lower().replace('x', '')) }
 
         log.info("The value of sms is %s", sms)
