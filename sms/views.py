@@ -1,6 +1,8 @@
 from django.shortcuts import render
 
 from django.http import JsonResponse
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 from django.shortcuts import render, get_object_or_404
 
 from django.template.loader import render_to_string
