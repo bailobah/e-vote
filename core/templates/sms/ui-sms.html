@@ -54,7 +54,7 @@
                 Page {{ sms.number }} of {{ sms.paginator.num_pages }}.
             </span>
 
-            {% if data.has_next %}
+            {% if sms.has_next %}
                 <a href="?page={{ sms.next_page_number }}">next</a>
                 <a href="?page={{ sms.paginator.num_pages }}"> &raquo;</a>
             {% endif %}
