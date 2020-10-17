@@ -9,10 +9,11 @@
 
 
 
-    <table class="table table-dark table-striped" id="table" style="width:100% !important; font-size:10px; height:inherit;">
+    <table class="table table-dark table-striped" id="table" style="width:100% !important; font-size:20px; height:inherit;">
         <thead>
         <tr class="bg-success">
 
+            <th>ID</th>
             <th>SMS</th>
             <th>Tel envoyeur</th>
             <th>Date</th>
@@ -25,6 +26,7 @@
         {% for s in sms %}
         <tr>
 
+        <td>{{ s.id }}</td>
         <td>{{ s.sms }}</td>
         <td>{{ s.sender_phone }}</td>
         <td>{{ s.created_at }}</td>
