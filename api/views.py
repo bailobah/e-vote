@@ -124,85 +124,91 @@ def inbound_sms(request):
         grammar = r"(?P<key>[A-Za-z]*).(?P<value>[0-9]+)"
         sms = { k: int(v) for k, v in re.findall(grammar, request.GET.get("message").lower().replace('x', '')) }
         log.info("The value of sms is %s",sms)
+        if bool(sms) :
+            message = ''
+            try :
+                numero_polling = sms.pop("bv", None)
+                nbr_voters = sms.pop("votant", None)
+                nbr_invalids_ballots = sms.pop("bn")
+            except KeyError:
+                message += 'bv ou votant ou bn sont abscents dans le message envoyé'
 
-        message = ''
-        try :
-            numero_polling = sms.pop("bv", None)
-            nbr_voters = sms.pop("votant")
-            nbr_invalids_ballots = sms.pop("bn")
-        except KeyError:
-            message += 'bv ou votant ou bn sont abscents dans le message envoyé'
 
+            if nbr_voters !=  sum(sms.values()) :
+                message += ' La somme des voies des partis est different du nombre de votants'
+            if len(sms) != PoliticalParty.objects.filter(is_active=True).count() :
+                message += f'| Le nombre de partis fourni ({len(sms)}) est différent ({PoliticalParty.objects.filter(is_active=True).count()})'
 
-        if nbr_voters !=  sum(sms.values()) :
-            message += ' La somme des voies des partis est different du nombre de votants'
-        if len(sms) != PoliticalParty.objects.filter(is_active=True).count() :
-            message += f'| Le nombre de partis fourni ({len(sms)}) est différent ({PoliticalParty.objects.filter(is_active=True).count()})'
+            election = get_object_or_404(Election, pk=1)
 
-        election = get_object_or_404(Election, pk=1)
+            if numero_polling != None :
+                try:
+                    polling = PollingStation.objects.filter(numero=numero_polling,is_active=True).first()
+                    log.info("entry and locality existing")
+                    log.info("The value of polling is %s", polling)
+                    if polling == None :
+                        message += f' Le pv associé a ce bureau de vote ({numero_polling}) est innexistant ou a déjà été traité'
 
-        if numero_polling != None :
-            try:
-                polling = PollingStation.objects.filter(numero=numero_polling,is_active=True).first()
-                log.info("entry and locality existing")
-                log.info("The value of polling is %s", polling)
-                if polling == None :
-                    message += f'| Le pv associé a ce bureau de vote ({numero_polling}) est innexistant ou a déjà été traité'
+                    if not MinuteSms.objects.filter(polling=polling).exists() and polling != None and Allocation.objects.filter(locality_id=polling.locality_id).exists():
+                        log.info("The value of locality_id is %s",  polling.locality_id)
+                        allocation = Allocation.objects.filter(locality_id=polling.locality_id).first()
 
-                if not MinuteSms.objects.filter(polling=polling).exists() and polling != None and Allocation.objects.filter(locality_id=polling.locality_id).exists():
-                    log.info("The value of locality_id is %s",  polling.locality_id)
-                    allocation = Allocation.objects.filter(locality_id=polling.locality_id).first()
+                        user = User.objects.filter(pk=allocation.user.id).first()
+                        log.info("The value of user is %s", user)
+                        delegate_phone = user.phone_number
+                        if message != '' :
+                            minute = MinuteSms.objects.create(election=election,
+                                                          polling=polling,
+                                                          user=user,
+                                                          nbr_registrants=polling.nbr_registrants,
+                                                          nbr_voters= nbr_voters,
+                                                          nbr_invalids_ballots=nbr_invalids_ballots,
+                                                          nbr_votes_cast= nbr_voters - nbr_invalids_ballots,
+                                                          )
+                            log.info("The value of minute is %s", minute)
+                            for party, votes_obtained in sms.items():
 
-                    user = User.objects.filter(pk=allocation.user.id).first()
-                    log.info("The value of user is %s", user)
-                    delegate_phone = user.phone_number
-                    if message != '' :
-                        minute = MinuteSms.objects.create(election=election,
-                                                      polling=polling,
-                                                      user=user,
-                                                      nbr_registrants=polling.nbr_registrants,
-                                                      nbr_voters= nbr_voters,
-                                                      nbr_invalids_ballots=nbr_invalids_ballots,
-                                                      nbr_votes_cast= nbr_voters - nbr_invalids_ballots,
-                                                      )
-                        log.info("The value of minute is %s", minute)
-                        for party, votes_obtained in sms.items():
+                                try:
+                                    political_party = PoliticalParty.objects.filter(name=party,is_active=True).first()
+                                    if political_party != None :
+                                        MinuteDetailsSms.objects.create(minute=minute,
+                                                                                       political_party=political_party,
+                                                                                       nbr_votes_obtained=votes_obtained)
+                                    else :
+                                        message += f'| Le parti ({party.upper()}) est inconnu'
+                                        rej = RejectedSms.objects.create(sms=request.GET.get("message"),
+                                                                        sender_phone=sender_phone,
+                                                                        errorMessage=message, delegate_phone=delegate_phone)
+                                        log.info("The value of rej is %s", rej)
 
-                            try:
-                                political_party = PoliticalParty.objects.filter(name=party,is_active=True).first()
-                                if political_party != None :
-                                    MinuteDetailsSms.objects.create(minute=minute,
-                                                                                   political_party=political_party,
-                                                                                   nbr_votes_obtained=votes_obtained)
-                                else :
-                                    message += f'| Le parti ({party.upper()}) est inconnu'
-                                    rej = RejectedSms.objects.create(sms=request.GET.get("message"),
-                                                                    sender_phone=sender_phone,
-                                                                    errorMessage=message, delegate_phone=delegate_phone)
+                                except PoliticalParty.DoesNotExist :
+                                    message += f' Le parti ({party.upper()}) est inconnu'
+                                    rej = RejectedSms.objects.create(sms=request.GET.get("message"), sender_phone=sender_phone, errorMessage=message,
+                                                                    delegate_phone=delegate_phone)
                                     log.info("The value of rej is %s", rej)
-
-                            except PoliticalParty.DoesNotExist :
-                                message += f'| Le parti ({party.upper()}) est inconnu'
-                                rej = RejectedSms.objects.create(sms=request.GET.get("message"), sender_phone=sender_phone, errorMessage=message,
-                                                                delegate_phone=delegate_phone)
-                                log.info("The value of rej is %s", rej)
+                        else :
+                            rej = RejectedSms.objects.create(sms=request.GET.get("message"),sender_phone=sender_phone,errorMessage=message,delegate_phone = delegate_phone)
+                            log.info("The value of rej is %s", rej)
                     else :
-                        rej = RejectedSms.objects.create(sms=request.GET.get("message"),sender_phone=sender_phone,errorMessage=message,delegate_phone = delegate_phone)
+                        message += f'Le bureau de vote ({numero_polling}) a déjà été traité'
+                        rej = RejectedSms.objects.create(sms=request.GET.get("message"), sender_phone=sender_phone,errorMessage=message, delegate_phone=delegate_phone)
                         log.info("The value of rej is %s", rej)
-                else :
-                    message += f'Le bureau de vote ({numero_polling}) a déjà été traité'
+                except PollingStation.DoesNotExist:
+                    message  += f'Le bureau de vote ({numero_polling}) fourni est innexistant'
                     rej = RejectedSms.objects.create(sms=request.GET.get("message"), sender_phone=sender_phone,errorMessage=message, delegate_phone=delegate_phone)
                     log.info("The value of rej is %s", rej)
-            except PollingStation.DoesNotExist:
-                message  += f'Le bureau de vote ({numero_polling}) fourni est innexistant'
-                rej = RejectedSms.objects.create(sms=request.GET.get("message"), sender_phone=sender_phone,errorMessage=message, delegate_phone=delegate_phone)
-                log.info("The value of rej is %s", rej)
 
-        else :
-            message += f'Le bureau de vote ({numero_polling}) fourni est innexistant'
+            else :
+                message += f'Le bureau de vote ({numero_polling}) fourni est innexistant'
+                rej = RejectedSms.objects.create(sms=request.GET.get("message"),
+                                                sender_phone=sender_phone, errorMessage=message, delegate_phone=delegate_phone)
+                log.info("The value of rej is %s", rej)
+        else:
+            message = f'Le format du message est invalid'
             rej = RejectedSms.objects.create(sms=request.GET.get("message"),
-                                            sender_phone=sender_phone, errorMessage=message, delegate_phone=delegate_phone)
+                                             sender_phone=sender_phone, errorMessage=message, delegate_phone=delegate_phone)
             log.info("The value of rej is %s", rej)
+            log.info("The value of sms is %s", request.GET.get("message"))
 
 
     return JsonResponse({'':''}, status=HTTP_200_OK)
