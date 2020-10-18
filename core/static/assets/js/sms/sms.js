@@ -50,6 +50,6 @@ $(function () {
     $("#modal-sms").on("submit", ".js-sms-update-form", saveForm);
 
     //Delection election
-    $("#sms-table").on("click", ".js-delete-political_party", loadForm);
+    $("#sms-table").on("click", ".js-delete-sms", loadForm);
     $("#modal-sms").on("submit", ".js-sms-delete-form", saveForm);
 });

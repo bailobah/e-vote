@@ -58,6 +58,7 @@ class RejectedSms(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     errorMessage = models.CharField(max_length=1000, default="")
     delegate_phone = models.CharField(max_length=100, default="")
+    is_active = models.BooleanField(default=True)
 
     class Meta:
         db_table = "rejected_sms"

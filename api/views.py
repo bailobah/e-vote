@@ -173,37 +173,36 @@ def inbound_sms(request):
                                         MinuteDetailsSms.objects.create(minute=minute, political_party=political_party, nbr_votes_obtained = votes_obtained)
                                     else :
                                         message += f'Le parti ({party.upper()}) est inconnu, '
-                                        rej = RejectedSms.objects.create(sms=request.GET.get("message"),
-                                                                        sender_phone=sender_phone,
-                                                                        errorMessage=message, delegate_phone=delegate_phone)
+                                        rej = RejectedSms.objects.create(sms=request.GET.get("message"),sender_phone=sender_phone,
+                                                                        errorMessage=message, delegate_phone=delegate_phone, is_active=True)
                                         log.info("The value of rej is %s", rej)
 
                                 except PoliticalParty.DoesNotExist :
                                     message += f', Le parti ({party.upper()}) est inconnu'
                                     rej = RejectedSms.objects.create(sms=request.GET.get("message"), sender_phone=sender_phone, errorMessage=message,
-                                                                    delegate_phone=delegate_phone)
+                                                                    delegate_phone=delegate_phone, is_active=True)
                                     log.info("The value of rej is %s", rej)
                         else :
-                            rej = RejectedSms.objects.create(sms=request.GET.get("message"),sender_phone=sender_phone,errorMessage=message,delegate_phone = delegate_phone)
+                            rej = RejectedSms.objects.create(sms=request.GET.get("message"),sender_phone=sender_phone,errorMessage=message,delegate_phone = delegate_phone, is_active=True)
                             log.info("The value of rej is %s", rej)
                     else :
                         message += f'Le bureau de vote ({numero_polling}) a déjà été traité, '
-                        rej = RejectedSms.objects.create(sms=request.GET.get("message"), sender_phone=sender_phone,errorMessage=message, delegate_phone=delegate_phone)
+                        rej = RejectedSms.objects.create(sms=request.GET.get("message"), sender_phone=sender_phone,errorMessage=message, delegate_phone=delegate_phone, is_active=True)
                         log.info("The value of rej is %s", rej)
                 except PollingStation.DoesNotExist:
                     message  += f'Le bureau de vote ({numero_polling}) fourni est innexistant, '
-                    rej = RejectedSms.objects.create(sms=request.GET.get("message"), sender_phone=sender_phone,errorMessage=message, delegate_phone=delegate_phone)
+                    rej = RejectedSms.objects.create(sms=request.GET.get("message"), sender_phone=sender_phone,errorMessage=message, delegate_phone=delegate_phone, is_active=True)
                     log.info("The value of rej is %s", rej)
 
             else :
                 message += f'Le bureau de vote ({numero_polling}) fourni est innexistant, '
                 rej = RejectedSms.objects.create(sms=request.GET.get("message"),
-                                                sender_phone=sender_phone, errorMessage=message, delegate_phone=delegate_phone)
+                                                sender_phone=sender_phone, errorMessage=message, delegate_phone=delegate_phone, is_active=True)
                 log.info("The value of rej is %s", rej)
         else:
             message = f'Le format du message est invalid, '
             rej = RejectedSms.objects.create(sms=request.GET.get("message"),
-                                             sender_phone=sender_phone, errorMessage=message, delegate_phone=delegate_phone)
+                                             sender_phone=sender_phone, errorMessage=message, delegate_phone=delegate_phone, is_active=True)
             log.info("The value of rej is %s", rej)
             log.info("The value of sms is %s", request.GET.get("message"))
 

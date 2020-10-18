@@ -28,7 +28,7 @@ def save_sms_form(request, form, template_name):
 
 def sms_list(request):
 
-    sms = RejectedSms.objects.all().order_by('-id')
+    sms = RejectedSms.objects.filter(is_active=True).order_by('-id')
 
     page = request.GET.get('page', 1)
     paginator = Paginator(sms, 20)
@@ -45,7 +45,8 @@ def sms_delete(request, pk):
     sms = get_object_or_404(RejectedSms, pk=pk)
     data = dict()
     if request.method == 'POST':
-        sms.delete()
+        sms.is_active = False
+        sms.save()
         data['form_is_valid'] = True
         sms = RejectedSms.objects.all().order_by('-id')
         data['html_sms_list'] = render_to_string('sms/list.html', {
