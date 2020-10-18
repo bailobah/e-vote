@@ -28,6 +28,7 @@ def sms_list(request):
 
 def sms_delete(request, pk):
     sms = get_object_or_404(RejectedSms, pk=pk)
+    print(sms)
     data = dict()
     if request.method == 'POST':
         sms.is_active = False
