@@ -155,7 +155,7 @@ def inbound_sms(request):
                         user = User.objects.filter(pk=allocation.user.id).first()
                         log.info("The value of user is %s", user)
                         delegate_phone = user.phone_number
-                        if message != '' :
+                        if message == '' :
                             minute = MinuteSms.objects.create(election=election,
                                                           polling=polling,
                                                           user=user,
