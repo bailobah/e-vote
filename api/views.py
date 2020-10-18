@@ -116,6 +116,7 @@ def inbound_sms(request):
         delegate_phone = ''
 
         grammar = r"(?P<key>[A-Za-z]*).(?P<value>[0-9]+)"
+
         sms = { k: int(v) for k, v in re.findall(grammar, request.GET.get("message").lower().replace('x', '')) }
 
         log.info("The value of sms is %s", sms)
@@ -124,8 +125,8 @@ def inbound_sms(request):
 
             message = ''
             try :
-                numero_polling = int(sms.pop("bv", None))
-                nbr_voters = int(sms.pop("votant"))
+                numero_polling = sms.pop("bv", None)
+                nbr_voters = sms.pop("votant")
                 nbr_invalids_ballots = int(sms.pop("bn"))
             except KeyError:
                 message += 'BV ou VOTANT ou BN sont abscents dans le message envoyé, '
@@ -140,7 +141,7 @@ def inbound_sms(request):
 
             if numero_polling != None :
                 try:
-                    polling = PollingStation.objects.filter(numero=numero_polling,is_active=True).first()
+                    polling = PollingStation.objects.filter(numero=int(numero_polling),is_active=True).first()
                     log.info("entry and locality existing")
                     log.info("The value of polling is %s", polling)
 
