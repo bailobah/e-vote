@@ -1,33 +1,22 @@
 
-{% for f in locality_types %}
+{% for u in users %}
 <tr>
-    <td>
-        <span class="custom-checkbox">
-            <input type="checkbox" id="checkbox1" name="options[]" value="{{ f.id }}">
-            <label for="checkbox1"></label>
-        </span>
-    </td>
-    <td>{{ f.id }}</td>
-    <td>{{ f.name }}</td>
-    <td>{{ f.is_active }}</td>
-    <td>{{ f.description }}</td>
-    <td>
 
+    <td>{{ u.id }}</td>
+    <td>{{ u.first_name }}</td>
+    <td>{{ f.last_name }}</td>
+    <td>{{ f.is_staff }}</td>
+    <td>{{ f.is_superviser }}</td>
+    <td>
         <a type="button"
            class="btn btn-warning btn-sm js-update"
-           data-url="{% url 'locality_type_update' f.id %}" title="Modifier ce PV">
+           data-url="{% url 'user_update' u.id %}" title="Modifier ce PV">
             <i class="fa fa-edit icon-large"></i>
         </a>
-        <a type="button"
-           class="btn btn-danger btn-sm js-delete"
-           data-url="{% url 'locality_type_delete' f.id %}" title="Supprimer la localité">
-            <i class="fa fa-trash icon-large"></i>
-        </a>
     </td>
-
 </tr>
 {% empty %}
 <tr>
-    <td colspan="7" class="text-center bg-warning">Zero localité enrégistré</td>
+    <td colspan="7" class="text-center bg-warning">Zero user enrégistré</td>
 </tr>
 {% endfor %}

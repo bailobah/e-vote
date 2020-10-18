@@ -1,5 +1,5 @@
 {% load widget_tweaks %}
-<form method="post" action="{% url 'locality_type_update' form.instance.pk %}" class="js-update-form">
+<form method="post" action="{% url 'user_update' form.instance.pk %}" class="js-update-form">
   {% csrf_token %}
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -8,7 +8,7 @@
     <h4 class="modal-title">&nbsp; Editer</h4>
   </div>
   <div class="modal-body">
-    {% include 'locality_type/form.html' %}
+    {% include 'user/form.html' %}
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>

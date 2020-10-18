@@ -132,7 +132,7 @@ def inbound_sms(request):
                 message += 'BV ou VOTANT ou BN sont abscents dans le message envoyé, '
 
             if nbr_voters - nbr_invalids_ballots !=  sum(sms.values()) :
-                message += f'La somme des voies des partis ({sum(sms.values())}) est different du nombre de votants ({nbr_voters}), '
+                message += f'La somme des voies des partis ({sum(sms.values())}) est different du nombre de votants ({nbr_voters - nbr_invalids_ballots}), '
 
             if len(sms) != PoliticalParty.objects.filter(is_active=True).count() :
                 message += f'Le nombre de partis fourni ({len(sms)}) est différent ({PoliticalParty.objects.filter(is_active=True).count()}), '
@@ -173,9 +173,8 @@ def inbound_sms(request):
                                         MinuteDetailsSms.objects.create(minute=minute, political_party=political_party, nbr_votes_obtained = votes_obtained)
                                     else :
                                         message += f'Le parti ({party.upper()}) est inconnu, '
-                                        rej = RejectedSms.objects.create(sms=request.GET.get("message"),sender_phone=sender_phone,
-                                                                        errorMessage=message, delegate_phone=delegate_phone, is_active=True)
-                                        log.info("The value of rej is %s", rej)
+                                        rej = RejectedSms.objects.create(sms=request.GET.get("message"), sender_phone=sender_phone, errorMessage=message, delegate_phone=delegate_phone, is_active=True)
+                                        log.info("The value of rej in political party is %s", rej)
 
                                 except PoliticalParty.DoesNotExist :
                                     message += f', Le parti ({party.upper()}) est inconnu'
@@ -183,6 +182,7 @@ def inbound_sms(request):
                                                                     delegate_phone=delegate_phone, is_active=True)
                                     log.info("The value of rej is %s", rej)
                         else :
+                            log.info("The value of message is %s", message)
                             rej = RejectedSms.objects.create(sms=request.GET.get("message"),sender_phone=sender_phone,errorMessage=message,delegate_phone = delegate_phone, is_active=True)
                             log.info("The value of rej is %s", rej)
                     else :
