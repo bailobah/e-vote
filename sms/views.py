@@ -9,22 +9,7 @@ from django.template.loader import render_to_string
 from sms.forms import RejectedSmsForm
 from api.models import RejectedSms
 
-def save_sms_form(request, form, template_name):
-    data = dict()
-    if request.method == 'POST':
-        if form.is_valid():
-            form.save()
-            data['form_is_valid'] = True
-            sms = PoliticalParty.objects.all().order_by('-id')
-            data['html_sms_list'] = render_to_string('sms/list.html', {
-                'sms': sms
-            })
-        else:
-            data['form_is_valid'] = False
-    context = {'form': form}
-    data['html_form'] = render_to_string(template_name, context, request=request)
 
-    return JsonResponse(data)
 
 def sms_list(request):
 
