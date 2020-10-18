@@ -53,38 +53,10 @@ def sms_delete(request, pk):
             'sms': sms
         })
     else:
-        context = {'sms': political_party}
+        context = {'sms': sms}
         data['html_form'] = render_to_string('sms/delete.html',
             context,
             request=request,
         )
     return JsonResponse(data)
 
-def sms_create(request):
-    data = dict()
-
-    if request.method == 'POST':
-        form = RejectedSmsForm(request.POST)
-        if form.is_valid():
-            form.save()
-            data['form_is_valid'] = True
-        else:
-            data['form_is_valid'] = False
-    else:
-        form = PoliticalPartyForm()
-
-    context = {'form': form}
-    data['html_form'] = render_to_string('sms/create.html',
-                                         context,
-                                         request=request
-                                         )
-    return JsonResponse(data)
-
-def sms_update(request, pk):
-    sms = get_object_or_404(RejectedSms, pk=pk)
-
-    if request.method == 'POST':
-        form = RejectedSmsForm(request.POST, instance=sms)
-    else:
-        form = RejectedSmsForm(instance=sms)
-    return save_sms_form(request, form, 'sms/update.html')

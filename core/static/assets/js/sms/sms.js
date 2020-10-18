@@ -41,14 +41,6 @@ $(function () {
     return false;
   }
 
-    // Create election
-    $(".js-create-sms").click(loadForm);
-    $("#modal-sms").on("submit", ".js-sms-create-form", saveForm);
-
-    // Update election
-    $("#sms-table").on("click", ".js-update-sms", loadForm);
-    $("#modal-sms").on("submit", ".js-sms-update-form", saveForm);
-
     //Delection election
     $("#sms-table").on("click", ".js-delete-sms", loadForm);
     $("#modal-sms").on("submit", ".js-sms-delete-form", saveForm);
