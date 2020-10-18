@@ -26,7 +26,7 @@ def sms_list(request):
 
     return render(request, 'sms/ui-sms.html', {'sms': sms})
 
-def sms_delete(request, pk):
+def sms_mode_delete(request, pk):
     sms = get_object_or_404(RejectedSms, pk=pk)
     print(sms)
     data = dict()
