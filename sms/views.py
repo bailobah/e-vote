@@ -26,23 +26,23 @@ def sms_list(request):
 
     return render(request, 'sms/ui-sms.html', {'sms': sms})
 
-def sms_mode_delete(request, pk):
-    sms = get_object_or_404(RejectedSms, pk=pk)
-    print(sms)
-    data = dict()
-    if request.method == 'POST':
-        sms.is_active = False
-        sms.save()
-        data['form_is_valid'] = True
-        sms = RejectedSms.objects.all().order_by('-id')
-        data['html_sms_list'] = render_to_string('sms/list.html', {
-            'sms': sms
-        })
-    else:
-        context = {'sms': sms}
-        data['html_form'] = render_to_string('sms/delete.html',
-            context,
-            request=request,
-        )
-    return JsonResponse(data)
+# def sms_mode_delete(request, pk):
+#     sms = get_object_or_404(RejectedSms, pk=pk)
+#     print(sms)
+#     data = dict()
+#     if request.method == 'POST':
+#         sms.is_active = False
+#         sms.save()
+#         data['form_is_valid'] = True
+#         sms = RejectedSms.objects.all().order_by('-id')
+#         data['html_sms_list'] = render_to_string('sms/list.html', {
+#             'sms': sms
+#         })
+#     else:
+#         context = {'sms': sms}
+#         data['html_form'] = render_to_string('sms/delete.html',
+#             context,
+#             request=request,
+#         )
+#     return JsonResponse(data)
 
