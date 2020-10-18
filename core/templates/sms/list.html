@@ -10,11 +10,10 @@
     <td>{{ s.errorMessage }}</td>
     <td>{{ s.delegate_phone }}</td>
     <td>
-      <button type="button"
-              class="btn btn-danger btn-sm js-delete-sms"
-              data-url="{% url 'sms_mode_delete' pk=sms.id %}">
-        <span class="glyphicon glyphicon-trash"></span> Supprimer
-      </button>
+       <button type="button" class="btn btn-danger btn-sm js-delete-sms"
+                    data-url="{% url 'sms_mode_delete' sms.id %}">
+                    <span class="glyphicon glyphicon-trash"></span> Delete
+       </button>
     </td>
 
 </tr>

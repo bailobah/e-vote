@@ -33,13 +33,11 @@
         <td>{{ s.errorMessage }}</td>
         <td>{{ s.delegate_phone }}</td>
                 <td>
-
-      <a type="button"
-              class="btn btn-danger btn-sm js-delete-sms"
-              data-url="{% url 'sms_mode_delete' pk=sms.id %}" title="Supprimer">
-        <i class="fa fa-trash icon-large"></i>
-      </a>
-    </td>
+                    <button type="button" class="btn btn-danger btn-sm js-delete-sms"
+                    data-url="{% url 'sms_mode_delete' sms.id %}">
+                    <span class="glyphicon glyphicon-trash"></span> Delete
+                    </button>
+                </td>
 
         </tr>
         {% empty %}
