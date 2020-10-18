@@ -13,7 +13,7 @@ from api.models import RejectedSms
 
 def sms_list(request):
 
-    sms = RejectedSms.objects.filter(is_active=True).order_by('-id')
+    sms = RejectedSms.objects.all().order_by('-id')
 
     page = request.GET.get('page', 1)
     paginator = Paginator(sms, 20)
