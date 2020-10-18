@@ -1,5 +1,5 @@
 {% load widget_tweaks %}
-<form method="post" action="{% url 'sms_delete' sms.id %}" class="js-delete-form">
+<form method="post" action="{% url 'sms_mode_delete' sms.id %}" class="js-delete-form">
   {% csrf_token %}
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
