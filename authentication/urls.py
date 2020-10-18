@@ -40,7 +40,6 @@ urlpatterns = [
     path('political_party/delete/<int:pk>/', views_party.political_party_delete, name='political_party_delete'),
 
     path('sms/', s_views.sms_list, name=f'sms_list'),
-    #path('sms/delete/<int:pk>/', s_views.sms_mode_delete, name='sms_mode_delete'),
 
     path('locality_type/', l_views.locality_type_list, name=f'{l_name}_list'),
     path('locality_type/create/', l_views.locality_type_create, name=f'{l_name}_create'),
