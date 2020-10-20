@@ -111,8 +111,8 @@ DATABASES = {
          'ENGINE': 'django.db.backends.mysql',
         'NAME': 'evote',
         'USER': 'evote',
-        'PASSWORD': 'uxpzecag2snvcglq',
-        'HOST' : 'db-mysql-nyc1-99275-do-user-7998149-0.b.db.ondigitalocean.com',
+        'PASSWORD': '',
+        'HOST' : 'db-mysql-nyc1-99275-do-user-79981e4r9-0.b.db.ondigitalocean.com',
         'PORT' : '25060',
         'OPTIONS':{
             'ssl' : {

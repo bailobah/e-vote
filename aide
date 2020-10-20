@@ -72,3 +72,22 @@ sudo systemctl restart gunicorn
 sudo nano /etc/nginx/sites-available/default
 
 
+python3 manage.py shell
+from django.shortcuts import render, get_object_or_404
+from election.models import Election, Minute
+from election.models import Election, Minute, PollingStation
+
+minute = get_object_or_404(Minute, polling_id=13186)
+minute.delete()
+
+
+poling = PollingStation.objects.filter(pk=13186).update(is_active=True)
+
+
+
+
+
+from users.models import User
+
+poling = User.objects.filter(phone_number='0760618807').update(is_superuser=False)
+User.objects.all().update(is_staff=False)
